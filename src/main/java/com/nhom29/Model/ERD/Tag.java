@@ -1,9 +1,18 @@
 package com.nhom29.Model.ERD;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.Set;
 import java.util.HashSet;
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tag {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

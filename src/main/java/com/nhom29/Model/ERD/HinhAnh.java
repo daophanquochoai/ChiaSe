@@ -15,6 +15,6 @@ public class HinhAnh {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(columnDefinition = "varchar(100)")
+    @Column(columnDefinition = "nvarchar(100)")
     private String Url;
 }

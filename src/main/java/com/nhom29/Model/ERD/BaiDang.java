@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import java.time.LocalDate;
 
 @Entity
 @Setter
@@ -20,17 +21,17 @@ import java.time.LocalDate;
 public class BaiDang {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
     @Column(columnDefinition = "nvarchar(255)")
-    private String TieuDe;
+    private String tieude;
     @Column(columnDefinition = "nvarchar(500)")
-    private String NoiDung;
-    @Column(columnDefinition = "DATE")
-    private LocalDate ThoiGianTao;
+    private String noidung;
+    @Column(columnDefinition = "DATETIME")
+    private LocalDateTime thoigiantao;
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "HinhAnh_Id")
+    @JoinColumn(name = "BaiDang_ID")
     private Set<HinhAnh> hinhAnh = new HashSet<>();
-    @ManyToMany
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "BaiDang_Tag",
             joinColumns = {
@@ -40,8 +41,8 @@ public class BaiDang {
                     @JoinColumn(name = "Id")
             }
     )
-    private Set<Tag> tag = new HashSet<>();
-    @ManyToMany
+    private List<Tag> tag = new ArrayList<>();
+    @ManyToMany( fetch = FetchType.EAGER)
     @JoinTable(
             name = "BaiDang_User",
             joinColumns = {
@@ -51,8 +52,8 @@ public class BaiDang {
                     @JoinColumn(name = "Email")
             }
     )
-    private Set<ThongTin> luu = new HashSet<>();
-    @ManyToMany
+    private List<ThongTin> luu = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "BaiDang_User_Like",
             joinColumns = {
@@ -62,10 +63,14 @@ public class BaiDang {
                     @JoinColumn(name = "Email")
             }
     )
-    private Set<ThongTin> like = new HashSet<>();
+    private List<ThongTin> like = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany( fetch = FetchType.EAGER)
     @JoinColumn(name = "BinhLuan")
-    private Set<BinhLuan> binhLuans = new HashSet<>();
+    private List<BinhLuan> binhluan = new ArrayList<>();
+    @ManyToOne
+    @Cascade({org.hibernate.annotations.CascadeType.DETACH})
+    @JoinColumn(name = "NguoiDang")
+    private ThongTin thongTin;
 
 }

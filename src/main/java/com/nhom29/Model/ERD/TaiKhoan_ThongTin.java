@@ -14,11 +14,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class TaiKhoan_ThongTin {
     @Id
-    private String email;
-    @OneToMany(cascade = CascadeType.ALL)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long Id;
+    @OneToOne(mappedBy = "taiKhoanThongTin")
+    private ThongTin thongtin;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( name = "TaiKhoan_Id")
-    private Set<TaiKhoan> taiKhoan = new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL)
+    private TaiKhoan taiKhoan;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( name = "UyQuyen_ID")
-    private Set<UyQuyen> uyQuyen = new HashSet<>();
+    private UyQuyen uyQuyen ;
 }

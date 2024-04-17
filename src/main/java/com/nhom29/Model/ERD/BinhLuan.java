@@ -27,6 +27,6 @@ public class BinhLuan {
     @Column(columnDefinition = "nvarchar(500)")
     private String noidung;
     @OneToMany
-    @JoinColumn(name = "HinhAnh")
+    @JoinColumn(name = "BinhLuanID")
     private Set<HinhAnh> hinhAnh  = new HashSet<>();
 }

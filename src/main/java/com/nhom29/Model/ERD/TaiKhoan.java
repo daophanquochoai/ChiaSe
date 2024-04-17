@@ -16,7 +16,9 @@ import lombok.Setter;
 public class TaiKhoan {
     @Id
     @Column(name = "username", columnDefinition = "varchar(50)")
-    private String TaiKhoan;
-    @Column(name = "password", nullable = false, columnDefinition = "varchar(50)")
-    private String MatKhau;
+    private String username;
+    @Column(name = "password", nullable = false, columnDefinition = "varchar(100)")
+    private String password;
+    @Column(columnDefinition = "BIT")
+    private Boolean active;
 }
