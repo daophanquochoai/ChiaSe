@@ -22,9 +22,6 @@ public class BaiDangImpl implements BaiDangInter {
     @Override
     public Page<BaiDang> timBaiDangPhanTrang(int offset, int pageSize, String feild) {
         baiDangRepository.findAll(PageRequest.of(offset,pageSize)).forEach( t -> {
-            System.out.println("=============================");
-            log.info(t.getTieude());
-            System.out.println("=============================");
         });
         return baiDangRepository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(feild).descending()));
 
@@ -38,6 +35,6 @@ public class BaiDangImpl implements BaiDangInter {
     @Override
     public Integer getNumberPage() {
         Integer number = baiDangRepository.getNumberPage();
-        return  (int) Math.ceil((double) number / (double) HomeController.numberPage);
+        return  (int) Math.ceil((double) number / (double) HomeController.numberPage) == 0 ? 1 : (int) Math.ceil((double) number / (double) HomeController.numberPage);
     }
 }

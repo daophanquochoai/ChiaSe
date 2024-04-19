@@ -1,6 +1,7 @@
 package com.nhom29.Cotnroller;
 
 import com.nhom29.DTO.BaiDangDTO;
+import com.nhom29.DTO.Infomation;
 import com.nhom29.DTO.Pagination;
 import com.nhom29.Model.ERD.BaiDang;
 import com.nhom29.Model.ERD.HinhAnh;
@@ -13,12 +14,11 @@ import com.nhom29.Service.Oauth2.security.OAuth2UserDetailCustom;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
@@ -36,6 +36,7 @@ public class HomeController {
     private final ThongTinInter thongTinInter;
     private final BaiDangInter baiDangInter;
     private final TagInter tagInter;
+    private final ValueApp valueApp;
 
     public static String uploadDir =System.getProperty("user.dir") + "/src/main/resources/static/images";
 
@@ -45,19 +46,35 @@ public class HomeController {
         return "login";
     }
     @GetMapping("/home")
-    public String home(Model model, @CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom, @RequestParam(value = "page", defaultValue = "1") int page) {
-        if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
-            return "redirect:/logout";
+    public String home(Model model, @CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
+                       @RequestParam(value = "page", defaultValue = "1") int page,
+                       @RequestParam(value = "sort", defaultValue = "thoigiantao") String sort,
+                       Authentication authentication
+    ) {
+        if( oAuth2UserDetailCustom == null ){
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            if( thongTinInter.layThongTinByUserName(userDetails.getUsername()).isEmpty())  return "redirect:/logout";
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTinByUserName(userDetails.getUsername()).get());
+        }else{
+            if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
+                return "redirect:/logout";
+            }
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
         }
-        System.out.println("====================================");
-        log.info("{}", page);
-        System.out.println("====================================");
-        model.addAttribute("page", baiDangInter.timBaiDangPhanTrang((page-1), numberPage, "TieuDe"));
-        model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
+        //infomation about BaiDang was paginationed and sort feilded
+        model.addAttribute("page", baiDangInter.timBaiDangPhanTrang((page-1), numberPage, "like"));
+        // All properti tag
         model.addAttribute("tags", tagInter.getAllTag());
+        // DTO fropm BaiDang
         model.addAttribute("baidang", new BaiDangDTO());
         Pagination pagination = new Pagination(baiDangInter.getNumberPage(),page);
+        // infomation about pagination
         model.addAttribute("pagination", pagination);
+        // value from application.p
+        Infomation infomation = new Infomation(valueApp.URLImage, valueApp.shortCutIcon);
+        model.addAttribute("image", infomation);
         return "home";
     }
     // view bi chan
@@ -123,5 +140,31 @@ public class HomeController {
         }
         return "redirect:/error";
     }
+    // redict page question
+    @GetMapping("/question")
+    public String pageQuestion(){
+        return "question";
+    }
 
+    // redict page detail question
+    @GetMapping("/question/{baiDangId}/{title}")
+    public String pageDetaiQuestion(Model model,@CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
+                                    @PathVariable Integer baiDangId,
+                                    @PathVariable String title){
+        if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
+            return "redirect:/logout";
+        }
+        // infomation about user logined
+        model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
+        // information from application file
+        Infomation infomation = new Infomation(valueApp.getURLImage(), valueApp.getShortCutIcon());
+        model.addAttribute("image", infomation);
+        return "detailQuestion";
+    }
+
+    @GetMapping("/email")
+    public String pageEmail(@RequestParam(value = "error", defaultValue = "") String error, Model model){
+            model.addAttribute("error", error);
+            return "layLaiMatKhau";
+    }
 }

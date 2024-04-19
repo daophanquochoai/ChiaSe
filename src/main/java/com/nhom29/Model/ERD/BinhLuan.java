@@ -24,7 +24,7 @@ public class BinhLuan {
     private ThongTin thongTin;
     @Column(columnDefinition = "DATE")
     private LocalDate date;
-    @Column(columnDefinition = "nvarchar(500)")
+    @Column(columnDefinition = "TEXT")
     private String noidung;
     @OneToMany
     @JoinColumn(name = "BinhLuanID")

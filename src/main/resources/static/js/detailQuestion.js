@@ -9,7 +9,6 @@ const buttonAddTag = document.querySelector(".form-floating .add_tag .btn-add-ta
 const inputAddTag = document.querySelector(".form-floating .add_tag .input-add-tag");
 const containerTag = document.querySelector(".form-floating .container_tag");
 
-
 var counter = 0;
 uploadIcon.addEventListener("click", ()=>{
     inputUpload.click();
@@ -88,3 +87,18 @@ buttonAddTag.addEventListener("click", ()=>{
     }
 
 })
+
+
+//modal image full screen
+const overplay = document.querySelector(".overplay")
+const imageOverplay = document.querySelector(".overplay img");
+const closeOverplay = document.querySelector(".overplay i");
+
+const modalImage = (urlImage) =>{
+    overplay.style.display = "flex";
+    imageOverplay.setAttribute("src", "https://www.simplilearn.com/ice9/free_resources_article_thumb/what_is_image_Processing.jpg");
+}
+closeOverplay.addEventListener("click", ()=>{ 
+    overplay.style.display="none";
+})
+console.log(overplay);

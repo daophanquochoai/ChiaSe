@@ -22,9 +22,9 @@ public class BaiDang {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "nvarchar(255)")
+    @Column(columnDefinition = "TEXT")
     private String tieude;
-    @Column(columnDefinition = "nvarchar(500)")
+    @Column(columnDefinition = "TEXT")
     private String noidung;
     @Column(columnDefinition = "DATETIME")
     private LocalDateTime thoigiantao;
@@ -38,7 +38,7 @@ public class BaiDang {
                     @JoinColumn(name = "BaiDang_ID")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "Id")
+                    @JoinColumn(name = "tagId")
             }
     )
     private List<Tag> tag = new ArrayList<>();
@@ -49,7 +49,7 @@ public class BaiDang {
                     @JoinColumn(name = "BaiDang_ID")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "Email")
+                    @JoinColumn(name = "nguoiLikeId")
             }
     )
     private List<ThongTin> luu = new ArrayList<>();
@@ -66,8 +66,8 @@ public class BaiDang {
     private List<ThongTin> like = new ArrayList<>();
 
     @OneToMany( fetch = FetchType.EAGER)
-    @JoinColumn(name = "BinhLuan")
-    private List<BinhLuan> binhluan = new ArrayList<>();
+    @JoinColumn(name = "baiDangId")
+    private List<BinhLuan> binhLuans = new ArrayList<>();
     @ManyToOne
     @Cascade({org.hibernate.annotations.CascadeType.DETACH})
     @JoinColumn(name = "NguoiDang")

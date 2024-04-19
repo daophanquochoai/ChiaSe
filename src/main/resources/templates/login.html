@@ -25,7 +25,7 @@
                 </div>
                 <div class="section_login_box section_login_box_bottom">
                     <label for="Password">Mật Khẩu</label>
-                    <input id="Password" name="password" required/>
+                    <input type="password" id="Password" name="password" required/>
                     <div th:if="${param.error}" class="login_faile">
                         * Kiểm tra lại mật khẩu
                     </div>
@@ -34,7 +34,7 @@
                     <button type="submit" class="section_login_accept">Đăng Nhập</button>
                 </div>
                 <div class="section_login_forget">
-                    <p><a>Lấy lại mật khẩu</a></p>
+                    <p><a th:href="@{/email}">Lấy lại mật khẩu</a></p>
                 </div>
             </form>
             <div class="section_login_cross">

@@ -1,4 +1,4 @@
-package com.nhom29;
+package com.nhom29.Service.Oauth2;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

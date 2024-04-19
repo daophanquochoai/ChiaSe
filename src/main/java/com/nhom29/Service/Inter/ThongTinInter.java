@@ -5,4 +5,6 @@ import java.util.Optional;
 
 public interface ThongTinInter {
     public Optional<ThongTin> layThongTin(Long id);
+    public Optional<ThongTin> layThongTinByUserName( String username);
+    public Optional<ThongTin> layThongTInByEmail(String email);
 }

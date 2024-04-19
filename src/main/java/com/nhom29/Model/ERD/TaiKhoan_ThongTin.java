@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.HashSet;
-import java.util.Set;
 @Entity
 @Getter
 @Setter
@@ -14,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class TaiKhoan_ThongTin {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
     @OneToOne(mappedBy = "taiKhoanThongTin")
     private ThongTin thongtin;

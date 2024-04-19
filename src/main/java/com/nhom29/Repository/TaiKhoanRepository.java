@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface TaiKhoanRepository extends JpaRepository<ThongTin, Long> {
     @Query("select t from ThongTin t where t.Email = :email")
     Optional<ThongTin> findByEmail(String email);
+    @Query("select t from ThongTin t where t.taiKhoanThongTin.taiKhoan.username = :username")
+    Optional<ThongTin> findByUsername(String username);
 }
 
 
