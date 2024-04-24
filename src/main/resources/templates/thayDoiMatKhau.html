@@ -20,7 +20,9 @@
 <body>
 
 <section class="container-fluid section_xac_nhan d-flex justify-content-center align-items-center">
-        <form th:action="@{/xuli/doimatkhau}" class="section_animation d-flex flex-column justify-content-center align-items-center">
+        <form th:action="@{/xuli/doimatkhau}" method="POST" class="section_animation d-flex flex-column justify-content-center align-items-center">
+            <input class="d-none" name="id" th:value="${thongtin.get().getId()}">
+            <input class="d-none" name="token" th:value="${matkhauToken}">
             <label for="matkhau" class="mb-2">Mật khẩu</label>            
             <div class="animation_box d-flex justify-content-center align-items-center">
                 <input id="matkhau" type="password">
@@ -28,7 +30,7 @@
             </div>
             <label for="xacnhan" class="mt-4 mb-2">Xác nhận mật khẩu</label>
             <div class="animation_box d-flex justify-content-center align-items-center">
-                <input id="xacnhan" type="password" class="mb-4">
+                <input id="xacnhan" type="password" class="mb-4" name="xacnhan">
                 <i class="fa-solid fa-eye hidden_display_xac_nhan"></i>
             </div>
             <button class="btn btn-info mb-2 button-submit" style="color: white;">Xác nhận</button>

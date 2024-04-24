@@ -16,3 +16,6 @@ window.addEventListener("load",()=>{
         time -= 1;
     }, 1000);
 });
+const submitForm = () =>{
+    document.getElementById("hiddenForm").submit();
+}

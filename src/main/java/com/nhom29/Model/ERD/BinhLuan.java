@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.Set;
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -19,14 +19,17 @@ public class BinhLuan {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @OneToOne
-    @JoinColumn(name = "UserID")
+    @ManyToOne
+    @JoinColumn(name = "UserID", nullable = false)
     private ThongTin thongTin;
-    @Column(columnDefinition = "DATE")
-    private LocalDate date;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "DATETIME", nullable = false)
+    private LocalDateTime date;
+    @Column(columnDefinition = "NTEXT", nullable = false)
     private String noidung;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "BinhLuanID")
     private Set<HinhAnh> hinhAnh  = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn( name = "baidangId", nullable = false)
+    private BaiDang baidang;
 }

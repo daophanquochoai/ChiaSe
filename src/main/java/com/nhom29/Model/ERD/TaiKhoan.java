@@ -19,6 +19,6 @@ public class TaiKhoan {
     private String username;
     @Column(name = "password", nullable = false, columnDefinition = "varchar(100)")
     private String password;
-    @Column(columnDefinition = "BIT")
+    @Column(columnDefinition = "BIT", nullable = false)
     private Boolean active;
 }

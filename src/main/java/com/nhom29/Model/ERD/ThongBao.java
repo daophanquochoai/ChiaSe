@@ -18,10 +18,10 @@ public class ThongBao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "NguoiNhanId")
+    @JoinColumn(name = "NguoiNhanId", nullable = false)
     private ThongTin nguoinhan;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn( name = "BaiDangId")
+    @JoinColumn( name = "BaiDangId", nullable = false)
     private BaiDang baidang;
     @Column( columnDefinition = "TEXT", nullable = false)
     private String noidung;

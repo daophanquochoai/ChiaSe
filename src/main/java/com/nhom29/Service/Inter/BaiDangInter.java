@@ -9,5 +9,6 @@ public interface BaiDangInter {
     Page<BaiDang> timBaiDangPhanTrang(int offset, int pageSize, String feild);
     Optional<BaiDang> saveBaiDang(BaiDang baiDang);
     Integer getNumberPage();
+    Optional<BaiDang> layChiTietBaiDang( Long id);
 
 }

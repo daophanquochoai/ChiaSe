@@ -1,11 +1,8 @@
 package com.nhom29.Service.Oauth2.security;
 
 import com.nhom29.Exception.BaseException;
-import com.nhom29.Model.ERD.TaiKhoan_ThongTin;
 import com.nhom29.Model.ERD.ThongTin;
-import com.nhom29.Model.ERD.UyQuyen;
-import com.nhom29.Model.OAuth2.Provider;
-import com.nhom29.Repository.TaiKhoanRepository;
+import com.nhom29.Repository.ThongTinRepository;
 import com.nhom29.Repository.TaiKhoan_ThongTInRepo;
 import com.nhom29.Repository.UyQuyenRepository;
 import com.nhom29.Service.Oauth2.OAuth2UserDetailFactory;
@@ -30,7 +27,7 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class CustomOAuth2UserDetailService extends DefaultOAuth2UserService {
     @Autowired
-    private TaiKhoanRepository taiKhoanRepository;
+    private ThongTinRepository thongTinRepository;
     @Autowired
     private UyQuyenRepository uyQuyenRepository;
     @Autowired
@@ -54,7 +51,7 @@ public class CustomOAuth2UserDetailService extends DefaultOAuth2UserService {
         if(ObjectUtils.isEmpty(oAuth2UserRequest)){
             throw new BaseException("400", "Can not found oauth2 uer from properties");
         }
-        Optional<ThongTin> thongTin = taiKhoanRepository.findByEmail(oAuth2UserInfo.getEmail());
+        Optional<ThongTin> thongTin = thongTinRepository.findByEmail(oAuth2UserInfo.getEmail());
         ThongTin us;
         if ( thongTin.isPresent() ){
             us = thongTin.get();
@@ -77,7 +74,7 @@ public class CustomOAuth2UserDetailService extends DefaultOAuth2UserService {
     public ThongTin updateOAuth2UserDetail(ThongTin user, OAuth2UserInfo oAuth2UserInfo){
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setAnhDaiDien(oAuth2UserInfo.getImageUrl());
-        return taiKhoanRepository.save(user);
+        return thongTinRepository.save(user);
     }
     public ThongTin registerNewOAuth2UserDetail( OAuth2UserRequest oAuth2UserRequest, OAuth2UserInfo oAuth2UserDetials){
         ThongTin user = new ThongTin();
@@ -85,7 +82,7 @@ public class CustomOAuth2UserDetailService extends DefaultOAuth2UserService {
         user.setEmail(oAuth2UserDetials.getEmail());
         user.setAnhDaiDien(oAuth2UserDetials.getImageUrl());
         user.setProviderId(oAuth2UserRequest.getClientRegistration().getRegistrationId());
-        return taiKhoanRepository.save(user);
+        return thongTinRepository.save(user);
 
 
     }

@@ -30,3 +30,8 @@
 .section_lay_lai .section_animation input:focus{
     border-bottom: 1px solid rgb(196, 246, 157);
 }
+
+/* preloading */
+.button_loading_email{
+    display: none;
+}

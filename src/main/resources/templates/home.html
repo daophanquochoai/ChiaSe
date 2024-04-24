@@ -17,10 +17,10 @@
                 crossorigin="anonymous"
                 referrerpolicy="no-referrer"
             />
-             <link rel="stylesheet" th:href="@{/css/reset.css}">
-            <link rel="stylesheet" th:href="@{/css/home.css}">
-<!--         <link rel="stylesheet" href="../static/css/reset.css" />-->
-<!--         <link rel="stylesheet" href="../static/css/home.css" />-->
+              <!-- <link rel="stylesheet" th:href="@{/css/reset.css}"> -->
+             <!-- <link rel="stylesheet" th:href="@{/css/home.css}"> -->
+       <link rel="stylesheet" href="../static/css/reset.css" />
+       <link rel="stylesheet" href="../static/css/home.css" />
             <link rel="shortcut icon" type="image/png" th:href="${image.getShortCutIcon()}"/>
         </head>
         <body>
@@ -50,28 +50,31 @@
                         <!--                <i class="fa-solid fa-circle" style="color: #fa0025;"></i>-->
                     </div>
                     <div class="header_info_image">
-                        <img th:src="${info.getAnhDaiDien()}" alt="avatar" />
+                        <img th:src="${info.getAnhDaiDien()}" alt="Avatar">
+<!--                        <img th:unless="${#strings.startsWith(info.getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${info.getAnhDaiDien()})}" alt="Avatar">-->
                     </div>
                 </div>
             </header>
             <section class="section_body d-flex">
+                <!--       thanh navabar         -->
                 <nav class="navbar_list">
                     <div class="navbar_items action">
                         <p>Home</p>
                     </div>
-                    <div class="navbar_items no_action">
-                        <p><a th:href="@{/question}">Question</a></p>
-                    </div>
-                    <div class="navbar_items no_action">
-                        <p><a th:href="@{/tag}">Tag</a></p>
-                    </div>
-                    <div class="navbar_items no_action">
-                        <p><a th:href="@{/Saved}">Saved</a></p>
-                    </div>
-                    <div class="navbar_items no_action">
-                        <p><a th:href="@{/Users}">Users</a></p>
-                    </div>
+                    <a th:href="@{/question}" class="navbar_items no_action">
+                        <p>Question</p>
+                    </a>
+                    <a th:href="@{/tag}" class="navbar_items no_action">
+                        <p>Tag</p>
+                    </a>
+                    <a th:href="@{/Saved}" class="navbar_items no_action">
+                        <p>Saved</p>
+                    </a>
+                    <a th:href="@{/Users}" class="navbar_items no_action">
+                        <p>Users</p>
+                    </a>
                 </nav>
+                <!--         section body        -->
                 <div class="section_body_main d-flex">
                     <div class="section_body_left">
                         <div class="section_body_top">
@@ -81,64 +84,145 @@
                             <div class="section_body_top_ask btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">Ask Question</div>
                         </div>
                         <div class="section_body_bottom">
-                            <div
-                                class="section_body_item d-flex align-items-center justify-content-between"
-                                th:each=" bai : ${page}"
-                            >
-                                <div class="item_left">
-                                    <div class="item_left_avt">
-                                        <img
-                                            th:src="${bai.getThongTin().getAnhDaiDien()}"
-                                            alt=""
-                                        />
-                                    </div>
-                                    <div
-                                        class="item_left_descrip d-flex flex-column"
-                                    >
-                                        <span
-                                            th:text="${bai.getLike() != null ? bai.getLike().size() : 0} + ' Likes' "
-                                        ></span>
-                                        <span
-                                            th:text="${bai.getBinhLuans() != null ? bai.getBinhLuans().size() : 0} + ' Answers'"
-                                        ></span>
-                                    </div>
-                                </div>
-                                <div class="item_right">
-                                    <p
-                                        class="item_right_title"
-                                        th:text="${bai.getTieude()}"
-                                    ></p>
-                                    <div class="d-flex item_right_regex">
-                                        <span th:each="t : ${bai.getTag()}"
-                                              class="bg-info bg-gradient"
-                                              th:text="${t.getTenTag()}">
-                                        </span>
-                                    </div>
+                            <th:block th:each=" bai : ${page}">
+                                    <div class="section_body_item d-flex align-items-center justify-content-between" th:onclick="'window.location.href = \'' + @{/question/{id}(id=${bai.Id})} + '\''">
+                                            <!--       list baidang         -->
+                                            <div class="item_left">
+                                                <div class="item_left_avt">
+                                                    <a th:href="@{/user/{id}(id=${bai.getThongTin().getId()})}">
+                                                        <img class="image_link" th:src="${bai.getThongTin().getAnhDaiDien()}" alt="Avatar">
+<!--                                                        <img class="image_link" th:unless="${#strings.startsWith(bai.getThongTin().getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${bai.getThongTin().getAnhDaiDien()})}" alt="Avatar">-->
+                                                    </a>
+                                                </div>
+                                                <div
+                                                        class="item_left_descrip d-flex flex-column"
+                                                >
+                                            <span
+                                                    th:text="${bai.getLike() != null ? bai.getLike().size() : 0} + ' Likes' "
+                                            ></span>
+                                                    <span
+                                                            th:text="${bai.getBinhLuans() != null ? bai.getBinhLuans().size() : 0} + ' Answers'"
+                                                    ></span>
+                                                </div>
+                                            </div>
+                                            <div class="item_right">
+                                                <p
+                                                        class="item_right_title"
+                                                        th:text="${bai.getTieude()}"
+                                                ></p>
+                                                <div class="d-flex item_right_regex">
+                                            <span th:each="t : ${bai.getTag()}"
+                                                  class="bg-info bg-gradient"
+                                                  th:text="${t.getTenTag()}">
+                                            </span>
+                                                </div>
 
-                                </div>
+                                            </div>
+                                    </div>
+                            </th:block>
+                        </div>
+                        <!--          pagination              -->
+                        <th:block th:if="${pagination.getTotal() > 0 && pagination.getTotal() <= 4}">
+                            <div class="section_body_pagenation">
+                                <nav aria-label="...">
+                                    <ul class="pagination pagination-sm">
+                                        <th:block th:each="p : ${#numbers.sequence(1, pagination.getTotal())}">
+                                            <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                    <span class="page-link" th:text="${p}"></span>
+                                                </th:block>
+                                                <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                    <a class="page-link" th:href="@{'/home?page=' + ${p}}" th:text="${p}"></a>
+                                                </th:block>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                </nav>
                             </div>
-                        </div>
-                        <div class="section_body_pagenation">
-                            <nav aria-label="...">
-                                <ul class="pagination pagination-sm">
-                                    <th:block th:each="p : ${#numbers.sequence(1, pagination.getTotal())}">
-                                        <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
-                                            <th:block th:if="${p == pagination.getCurrentPage()}">
-                                                <span class="page-link" th:text="${p}"></span>
+                        </th:block>
+                        <th:block th:if="${pagination.getTotal() > 4}">
+                            <div class="section_body_pagenation">
+                                <nav aria-label="...">
+                                    <ul class="pagination pagination-sm">
+                                        <th:block th:if="${pagination.getCurrentPage() == 1}">
+                                            <th:block th:each="p : ${#numbers.sequence(1, 3)}">
+                                                <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                    <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:text="${p}"></a>
+                                                    </th:block>
+                                                    <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:href="@{'/home?page=' + ${p}}" th:text="${p}"></a>
+                                                    </th:block>
+                                                </li>
                                             </th:block>
-                                            <th:block th:unless="${p == pagination.getCurrentPage()}">
-                                                <a class="page-link" th:href="@{'/home?page=' + ${p}}" th:text="${p}"></a>
+                                            <li><span class="page-link">...</span></li>
+                                            <li class="page-item">
+                                                <a class="page-link" th:href="@{'/home?page=' + ${pagination.getTotal()}}" th:text="${pagination.getTotal()}"></a>
+                                            </li>
+                                        </th:block>
+                                        <th:block th:if="${pagination.getCurrentPage() == pagination.getTotal() && pagination.getCurrentPage() != 1}">
+                                            <th:block th:each="p : ${#numbers.sequence(pagination.getCurrentPage()-2, pagination.getCurrentPage())}">
+                                                <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                    <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:text="${p}"></a>
+                                                    </th:block>
+                                                    <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:href="@{'/home?page=' + ${p}}" th:text="${p}"></a>
+                                                    </th:block>
+                                                </li>
                                             </th:block>
-                                        </li>
-                                    </th:block>
-                                </ul>
-                            </nav>
-                        </div>
+                                        </th:block>
+                                        <th:block th:if="${pagination.getCurrentPage() > 1 && pagination.getCurrentPage() < pagination.getTotal()}">
+                                            <th:block th:each="p : ${#numbers.sequence(pagination.getCurrentPage()-1, pagination.getCurrentPage()+1)}">
+                                                <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                    <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:text="${p}"></a>
+                                                    </th:block>
+                                                    <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:href="@{'/home?page=' + ${p}}" th:text="${p}"></a>
+                                                    </th:block>
+                                                </li>
+                                            </th:block>
+                                            <th:block th:if="${pagination.getCurrentPage() + 1 < pagination.getTotal()}">
+                                                <li><a class="page-link">...</a></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" th:href="@{'/home?page=' + ${pagination.getTotal()}}" th:text="${pagination.getTotal()}"></a>
+                                                </li>
+                                            </th:block>
+                                        </th:block>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </th:block>
+
                     </div>
                     <div class="section_body_right"></div>
                 </div>
             </section>
+            <footer>
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <img class="mb-4" style="width: 100px; height: 100px;" src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1460494926/bzx05ueutnoahkumlneg.png">
+                            <span style="color: white; font-size: 25px">StackOverFlow</span>
+                        </div>
+                        <p class="footer-text"><span class="footer-title">Đồ án :</span> Lập trình web</p>
+                        <p class="footer-text"><span class="footer-title">Giáo viên :</span> Nguyễn Trung Hiếu</p>
+                    </div>
+                    <span style="font-size: 50px; color: white;">10 Điểm</span>
+                    <ul>
+                       <span class="footer-title">Thành viên nhóm :</span>
+                       <li class="footer-text">Đào Phan Quốc Hoài</li> 
+                       <li class="footer-text">Lê Đức Thái</li>
+                       <li class="footer-text">Nguyễn Thanh Tùng</li>
+                    </ul>
+                </div>
+                <div>
 
+                </div>
+            </footer>
+
+            <!-- add baidang -->
             <form th:action="@{/upload}" th:object="${baidang}" method="POST" enctype="multipart/form-data" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <input style="display: none" th:value="${info.getId()}" name="id">
                 <div class="modal-dialog">
@@ -151,14 +235,14 @@
                       <div>
                         <div class="mb-3">
                           <label for="recipient-name" class="col-form-label">Title :</label>
-                          <input type="text" class="form-control" id="recipient-name" required th:field="*{tieuDe}" name="TieuDe">
+                          <input type="text" class="form-control input_title" id="recipient-name" required th:field="*{tieuDe}" name="TieuDe">
                         </div>
 <!--                        <div class="mb-3">-->
 <!--                          <label for="message-text" class="col-form-label">Nội dung :</label>-->
 <!--                          <textarea class="form-control" id="message-text" th:field="*{NoiDung}" name="NoiDung"></textarea>-->
 <!--                        </div>-->
                       <div class="form-floating mb-3">
-                          <textarea class="form-control" placeholder="Nội dung" id="floatingTextarea2" style="height: 100px" th:field="*{noiDung}" name="NoiDung"></textarea>
+                          <textarea class="form-control input_noi_dung" required placeholder="Nội dung" id="floatingTextarea2" style="height: 100px" th:field="*{noiDung}" name="NoiDung"></textarea>
                           <label for="floatingTextarea2">Content</label>
                       </div>
 
@@ -200,7 +284,13 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                      <button type="submit" class="btn btn-info tao_bai_viet" style="color:white">Tạo bài viết</button>
+                      <div>
+                        <button type="submit" class="btn btn-info tao_bai_viet" style="color:white">Tạo bài viết</button>
+                        <button class="btn btn-info button_loading" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span style="color:white">Tạo bài viết</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -211,9 +301,9 @@
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous"
             ></script>
-             <script th:src="@{/js/base.js}"></script>
-            <script th:src="@{/js/home.js}"></script>
-<!--           <script src="../static/js/base.js"> </script>-->
-<!--           <script src="../static/js/home.js"></script>-->
+              <!-- <script th:src="@{/js/base.js}"></script> -->
+             <!-- <script th:src="@{/js/home.js}"></script> -->
+         <script src="../static/js/base.js"> </script>
+         <script src="../static/js/home.js"></script>
         </body>
 </html>

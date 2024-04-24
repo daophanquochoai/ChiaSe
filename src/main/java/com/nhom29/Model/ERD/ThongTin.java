@@ -1,14 +1,13 @@
 package com.nhom29.Model.ERD;
 
-import com.nhom29.Model.OAuth2.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 @Entity
 @Setter
 @Getter
@@ -20,11 +19,11 @@ public class ThongTin {
     private Long id;
     @Column(columnDefinition = "varchar(255)")
     private String Email;
-    @Column(columnDefinition = "nvarchar(50)")
+    @Column(columnDefinition = "nvarchar(100)")
     private String Ho;
-    @Column(columnDefinition = "nvarchar(20)")
+    @Column(columnDefinition = "nvarchar(100)", nullable = false)
     private String Ten;
-    @Column(columnDefinition = "nvarchar(50)")
+    @Column(columnDefinition = "nvarchar(255)")
     private String Truong;
     @Column(columnDefinition = "varchar(10)")
     private String Sdt;
@@ -35,7 +34,7 @@ public class ThongTin {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "TaiKhoan_ThongTin")
     private TaiKhoan_ThongTin taiKhoanThongTin;
-    @Column
+    @Column(columnDefinition = "varchar(20)")
     private String providerId;
     @ManyToMany(mappedBy = "luu", cascade = CascadeType.ALL)
     private List<BaiDang> baiDang_Luu = new ArrayList<>();

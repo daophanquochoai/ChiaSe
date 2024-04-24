@@ -1,5 +1,7 @@
 package com.nhom29.Service.Impl;
 
+import com.nhom29.Model.QuenMatKhau.MatKhauToken;
+import com.nhom29.Repository.MatKhauTokenRepository;
 import com.nhom29.Service.Inter.MailInter;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class MailImpl implements MailInter {
     private final JavaMailSender javaMailSender;
+    private final MatKhauTokenRepository matKhauTokenRepo;
+
     @Value("${spring.mail.username}")
     private String emailSender;
     private LocalDateTime time = LocalDateTime.now();
@@ -50,7 +54,7 @@ public class MailImpl implements MailInter {
                             "<section class=\"container-fluid d-flex justify-content-center align-items-center w-100\" style=\"height:200px\">\n" +
                             "        <div>\n" +
                             "            <div style=\"font-size: 24px;\" class=\"mb-4 mt-4\">Trang Web chia sẻ tâm tư, tình cảm, nổi buồn, lo âu</div>\n" +
-                            "            <div class=\"w-100\"><img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Stack_Overflow_logo.svg/1280px-Stack_Overflow_logo.svg.png\" style=\"width: 100%;\"></div>\n" +
+                            "            <div class=\"w-100\"><img src=\"https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Stack_Overflow_logo.svg/1280px-Stack_Overflow_logo.svg.png\" style=\"width: 100%;height:80px;\"></div>\n" +
                             "            <div style=\"background-color: gray; color: white; text-align: center; font-size: 30px;\" class=\"mt-3 mb-3\">" +identify + "</div>\n" +
                             "        </div>\n" +
                             "</section>\n" +
@@ -69,15 +73,15 @@ public class MailImpl implements MailInter {
     }
 
     @Override
-    public Boolean accept(String maxacnhan, String identify) {
-        System.out.println("===================================");
-        log.info("{}", maxacnhan.equals(identify));
-        log.info("{}", time.plusMinutes(1).isAfter(LocalDateTime.now()));
-        System.out.println("===================================");
-        if( maxacnhan.equals(identify) && time.plusMinutes(1).isAfter(LocalDateTime.now())){
-            return true;
-        }else{
-            return false;
-        }
+    public Long accept(String maxacnhan, Long id) {
+        if( matKhauTokenRepo.xacnhan(maxacnhan, id, LocalDateTime.now().plusMinutes(1)).isEmpty()) return 0L;
+        MatKhauToken matKhauToken = matKhauTokenRepo.xacnhan(maxacnhan, id, LocalDateTime.now().plusMinutes(1)).get();
+        return matKhauToken.getId();
+    }
+
+    @Override
+    public Boolean check(Long id) {
+        if( matKhauTokenRepo.kiemTraThayDoi(id).isEmpty() ) return false;
+        return true;
     }
 }

@@ -51,7 +51,7 @@ header{
   box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
   top: 0;
   background-color: white;
-  z-index: 9999;
+  z-index: 9;
 }
 
 header .header_logo img{
@@ -169,4 +169,25 @@ header .header_info .header_info_image img{
 /* add tag or use tag */
 .modal-dialog .form-floating .add_tag{
   display: none;
+}
+
+
+
+/* preloading */
+.button_loading{
+  display: none;
+}
+
+/* footer */
+footer{
+  background-color: black;
+  padding: 20px 40px;
+}
+footer .footer-title{
+  color: aqua;
+  font-size: 1.5rem;
+}
+footer .footer-text{
+  color: white;
+  font-size: 16px;
 }

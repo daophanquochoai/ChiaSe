@@ -22,13 +22,13 @@ public class BaiDang {
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "NTEXT", nullable = false)
     private String tieude;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "NTEXT", nullable = false)
     private String noidung;
-    @Column(columnDefinition = "DATETIME")
+    @Column(columnDefinition = "DATETIME", nullable = false)
     private LocalDateTime thoigiantao;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "BaiDang_ID")
     private Set<HinhAnh> hinhAnh = new HashSet<>();
     @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -65,8 +65,8 @@ public class BaiDang {
     )
     private List<ThongTin> like = new ArrayList<>();
 
-    @OneToMany( fetch = FetchType.EAGER)
-    @JoinColumn(name = "baiDangId")
+    @OneToMany( fetch = FetchType.EAGER, mappedBy = "baidang")
+    @Cascade({org.hibernate.annotations.CascadeType.DETACH})
     private List<BinhLuan> binhLuans = new ArrayList<>();
     @ManyToOne
     @Cascade({org.hibernate.annotations.CascadeType.DETACH})

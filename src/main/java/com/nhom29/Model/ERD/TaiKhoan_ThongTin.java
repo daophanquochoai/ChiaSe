@@ -19,7 +19,7 @@ public class TaiKhoan_ThongTin {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( name = "TaiKhoan_Id")
     private TaiKhoan taiKhoan;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn( name = "UyQuyen_ID")
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn( name = "UyQuyen_ID", nullable = false)
     private UyQuyen uyQuyen ;
 }
