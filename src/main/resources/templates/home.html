@@ -17,16 +17,19 @@
                 crossorigin="anonymous"
                 referrerpolicy="no-referrer"
             />
-              <!-- <link rel="stylesheet" th:href="@{/css/reset.css}"> -->
-             <!-- <link rel="stylesheet" th:href="@{/css/home.css}"> -->
-       <link rel="stylesheet" href="../static/css/reset.css" />
-       <link rel="stylesheet" href="../static/css/home.css" />
+                 <link rel="stylesheet" th:href="@{/css/reset.css}">
+                <link rel="stylesheet" th:href="@{/css/home.css}">
+<!--          <link rel="stylesheet" href="../static/css/reset.css" />-->
+<!--          <link rel="stylesheet" href="../static/css/home.css" />-->
             <link rel="shortcut icon" type="image/png" th:href="${image.getShortCutIcon()}"/>
         </head>
         <body>
             <header
                 class="d-flex align-items-center justify-content-between w-100"
             >
+                <span class="d-none array_follow" th:data-array-follow="${baiDangJson}"></span>
+                <span class="d-none info_id" th:text="${info.getId()}"></span>
+
                 <div class="header_logo">
                     <a th:href="@{/home}"
                         ><img
@@ -43,14 +46,27 @@
                     </div>
                 </div>
                 <div class="header_info d-flex align-items-center">
-                    <div class="header_info_notice">
-                        <img
-                            src="https://cdn.icon-icons.com/icons2/2070/PNG/512/box_icon_126495.png"
-                        />
-                        <!--                <i class="fa-solid fa-circle" style="color: #fa0025;"></i>-->
+                    <div class="box_notice">
+                        <div class="position-relative header_info_notice">
+                            <img style="width: 100%;"
+                                src="https://cdn.icon-icons.com/icons2/2070/PNG/512/box_icon_126495.png"
+                            />
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notice_number" th:text="${noticeNotSeen}">
+                            </span>
+                        </div>
+                        <ul class="notice_list">
+                             <th:block th:each=" n : ${notice}">
+                                <a th:href="@{'question/' + ${n.getThongbao().getBaidang().getId()}}" >
+                                    <div class="notice_item" th:style="${n.getStatus() == true ? 'background-color:white;' : 'background-color:#d9d4d4;'}">
+                                        <li th:text="${n.thongbao.noidung}"></li>
+                                        <span th:text="${n.thongbao.thoigiantao}"></span>
+                                    </div>
+                                </a>
+                            </th:block>
+                        </ul>
                     </div>
                     <div class="header_info_image">
-                        <img th:src="${info.getAnhDaiDien()}" alt="Avatar">
+                        <a th:href="${'/user/' + info.id}"><img th:src="${info.getAnhDaiDien()}" alt="Avatar"></a>
 <!--                        <img th:unless="${#strings.startsWith(info.getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${info.getAnhDaiDien()})}" alt="Avatar">-->
                     </div>
                 </div>
@@ -199,28 +215,28 @@
                     <div class="section_body_right"></div>
                 </div>
             </section>
-            <footer>
-                <div class="w-100 d-flex justify-content-between align-items-center">
-                    <div>
-                        <div class="d-flex align-items-center">
-                            <img class="mb-4" style="width: 100px; height: 100px;" src="https://images.crunchbase.com/image/upload/c_pad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1460494926/bzx05ueutnoahkumlneg.png">
-                            <span style="color: white; font-size: 25px">StackOverFlow</span>
-                        </div>
-                        <p class="footer-text"><span class="footer-title">Đồ án :</span> Lập trình web</p>
-                        <p class="footer-text"><span class="footer-title">Giáo viên :</span> Nguyễn Trung Hiếu</p>
-                    </div>
-                    <span style="font-size: 50px; color: white;">10 Điểm</span>
-                    <ul>
-                       <span class="footer-title">Thành viên nhóm :</span>
-                       <li class="footer-text">Đào Phan Quốc Hoài</li> 
-                       <li class="footer-text">Lê Đức Thái</li>
-                       <li class="footer-text">Nguyễn Thanh Tùng</li>
-                    </ul>
-                </div>
-                <div>
+<!--            <footer>-->
+<!--                <div class="w-100 d-flex justify-content-between align-items-center">-->
+<!--                    <div>-->
+<!--                        <div class="d-flex align-items-center">-->
+<!--                            <img class="mb-4" style="width: 100px; height: 100px;" th:src="${image.getShortCutIcon()}">-->
+<!--                            <span style="color: white; font-size: 25px">StackOverFlow</span>-->
+<!--                        </div>-->
+<!--                        <p class="footer-text"><span class="footer-title">Đồ án :</span> Lập trình web</p>-->
+<!--                        <p class="footer-text"><span class="footer-title">Giáo viên :</span> Nguyễn Trung Hiếu</p>-->
+<!--                    </div>-->
+<!--                    <span style="font-size: 50px; color: white;">10 Điểm</span>-->
+<!--                    <ul>-->
+<!--                       <span class="footer-title">Thành viên nhóm :</span>-->
+<!--                       <li class="footer-text">Đào Phan Quốc Hoài</li> -->
+<!--                       <li class="footer-text">Lê Đức Thái</li>-->
+<!--                       <li class="footer-text">Nguyễn Thanh Tùng</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div>-->
 
-                </div>
-            </footer>
+<!--                </div>-->
+<!--            </footer>-->
 
             <!-- add baidang -->
             <form th:action="@{/upload}" th:object="${baidang}" method="POST" enctype="multipart/form-data" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -301,9 +317,12 @@
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
                 crossorigin="anonymous"
             ></script>
-              <!-- <script th:src="@{/js/base.js}"></script> -->
-             <!-- <script th:src="@{/js/home.js}"></script> -->
-         <script src="../static/js/base.js"> </script>
-         <script src="../static/js/home.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+              <script th:src="@{/js/base.js}"></script>
+              <script src="../static/js/modal_question.js"></script>
+              <script th:src="@{/js/home.js}"></script>
+<!--                      <script src="../static/js/base.js"> </scrip>-->
+<!--          <script src="../static/js/home.js"></script>-->
         </body>
 </html>

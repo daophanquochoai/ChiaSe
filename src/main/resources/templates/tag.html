@@ -21,47 +21,70 @@
 </head>
 
 <body>
-    <header class="d-flex align-items-center justify-content-between w-100">
-        <div class="header_logo">
-            <a href="#">
-                <img src="https://toidicodedao.files.wordpress.com/2015/03/so-logo.png" alt="">
-            </a>
+    <header
+        class="d-flex align-items-center justify-content-between w-100"
+>
+    <span class="d-none array_follow" th:data-array-follow="${baiDangJson}"></span>
+    <span class="d-none info_id" th:text="${info.getId()}"></span>
+
+    <div class="header_logo">
+        <a th:href="@{/home}"
+        ><img
+                th:src="${image.getImage()}"
+        /></a>
+    </div>
+    <div
+            class="header_search d-flex justify-content-center align-items-center"
+    >
+        <p>Products</p>
+        <div class="header_search_input w-100">
+            <!-- <div>icon</div> -->
+            <input />
         </div>
-        <div class="header_search d-flex justify-content-center align-items-center">
-            <p>Products</p>
-            <div class="header_search_input w-100">
-                <!-- <div>icon</div> -->
-                <input />
+    </div>
+    <div class="header_info d-flex align-items-center">
+        <div class="box_notice">
+            <div class="position-relative header_info_notice">
+                <img style="width: 100%;"
+                     src="https://cdn.icon-icons.com/icons2/2070/PNG/512/box_icon_126495.png"
+                />
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notice_number" th:text="${noticeNotSeen}">
+                                </span>
             </div>
+            <ul class="notice_list">
+                <th:block th:each=" n : ${notice}">
+                    <a th:href="@{'question/' + ${n.getThongbao().getBaidang().getId()}}" >
+                        <div class="notice_item" th:style="${n.getStatus() == true ? 'background-color:white;' : 'background-color:#d9d4d4;'}">
+                            <li th:text="${n.thongbao.noidung}"></li>
+                            <span th:text="${n.thongbao.thoigiantao}"></span>
+                        </div>
+                    </a>
+                </th:block>
+            </ul>
         </div>
-        <div class="header_info d-flex align-items-center">
-            <div class="header_info_notice">
-                <img src="https://cdn.icon-icons.com/icons2/2070/PNG/512/box_icon_126495.png" />
-                <!--                <i class="fa-solid fa-circle" style="color: #fa0025;"></i>-->
-            </div>
-            <div class="header_info_image">
-                <img th:if="${#strings.startsWith(info.getAnhDaiDien(), 'http')}" th:src="${info.getAnhDaiDien()}" alt="Avatar">
-                <img th:unless="${#strings.startsWith(info.getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${info.getAnhDaiDien()})}" alt="Avatar">
-            </div>
+        <div class="header_info_image">
+            <a th:href="${'/user/' + info.id}"><img th:src="${info.getAnhDaiDien()}" alt="Avatar"></a>
+            <!--                        <img th:unless="${#strings.startsWith(info.getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${info.getAnhDaiDien()})}" alt="Avatar">-->
         </div>
-    </header>
+    </div>
+</header>
     <section class="section_body d-flex">
         <nav class="navbar_list">
-            <div class="navbar_items no_action">
-                <p><a th:href="@{/home}">Home</a></p>
-            </div>
-            <div class="navbar_items no_action">
-                <p><a th:href="@{/question}">Question</a></p>
-            </div>
+            <a th:href="@{/home}" class="navbar_items no_action">
+                <p>Home</p>
+            </a>
+            <a th:href="@{/question}" class="navbar_items no_action">
+                <p>Question</p>
+            </a>
             <div class="navbar_items action">
-                <p><a th:href="@{/tag}">Tag</a></p>
+                <p>Tag</p>
             </div>
-            <div class="navbar_items no_action">
-                <p><a th:href="@{/Saved}">Saved</a></p>
-            </div>
-            <div class="navbar_items no_action">
-                <p><a th:href="@{/Users}">Users</a></p>
-            </div>
+            <a th:href="@{/Saved}" class="navbar_items no_action">
+                <p>Saved</p>
+            </a>
+            <a th:href="@{/Users}" class="navbar_items no_action">
+                <p>Users</p>
+            </a>
         </nav>
         <div class="section_body_main d-flex">
             <div class="section_body_left">
@@ -90,623 +113,23 @@
                 <div class="section_body_bottom">
                     <!-- row-cols-xl-4 -->
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2 my-4 card-content">
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
+                        <th:block th:each=" t : ${tags}">
+                            <div class="col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <a href="#" th:text="${t.tenTag}"></a>
+                                        <!--                  chờ question                          -->
+                                        </h5>
+                                        <p class="card-text v-truncate4" th:text="${t.noidung}"></p>
+                                        <div class="card-bottom d-flex jc-space-between text-wrap">
+                                            <p th:text="${t.getBaiDang().size() + ' question'}"></p>
+                                            <p th:text="${t.thoigiantao}"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">javascript</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        For questions about programming in ECMAScript (JavaScript/JS) and its different
-                                        dialects/implementations (except for ActionScript). Note that Lorem ipsum dolor
-                                        sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit amet
-                                        est deleniti Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                                        atque modi eius impedit sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">python</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Python is a dynamically typed, multi-purpose programming language. It is
-                                        designed to be quick to learn, understand, and use, and enforces a Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">java</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        Java is a high-level object-oriented programming language. Use this tag when
-                                        you're having problems using or understanding the language itself. This Lorem
-                                        ipsum dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit
-                                        sit amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <a href="#">C#</a>
-                                    </h5>
-                                    <p class="card-text v-truncate4">
-                                        C# (pronounced "see sharp") is a high-level, statically typed, multi-paradigm
-                                        programming language developed by Microsoft. C# code usually targets Lorem ipsum
-                                        dolor sit, amet consectetur adipisicing elit. Nemo atque modi eius impedit sit
-                                        amet est deleniti
-                                    </p>
-                                    <div class="card-bottom d-flex jc-space-between text-wrap">
-                                        <p>3000 questions</p>
-                                        <p>Created at: 20/02/2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        </th:block>
                 </div>
                 <div class="section_body_pagenation">
                     <div class="pagination">
@@ -722,12 +145,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!--    <script src="../static/js/base.js"> </script>-->
 <!--    <script src="../static/js/home.js"></script>s-->
 <!--    <script src="../static/js/tag.js"></script>-->
-<script th:src="@{/js/base.js}"></script>
-<script th:src="@{/js/home.js}"></script>
-<script th:src="@{/js/tag.js}"></script>
+    <script th:src="@{/js/base.js}"></script>
+    <script th:src="@{/js/tag.js}"></script>
 </body>
 
 </html>

@@ -29,10 +29,10 @@ public class Security {
                 .cors( c->c.disable())
                 .authorizeHttpRequests(
                 auth -> auth
-//                        .requestMatchers("/login", "/email/**", "/xacnhan/**", "/matkhau/**", "/xuli/**", "/taotaikhoan").permitAll()
-//                        .requestMatchers("/home", "/question/**", "/tag/**").hasAuthority("USER")
-//                        .anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/login", "/email/**", "/xacnhan/**", "/matkhau/**", "/xuli/**", "/taotaikhoan").permitAll()
+                        .requestMatchers("/home", "/question/**", "/tag/**").hasAuthority("USER")
+                        .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
                 )
                 .formLogin(
                         f -> f.loginPage("/login")

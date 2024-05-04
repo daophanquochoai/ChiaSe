@@ -21,7 +21,6 @@
   background: #7f7f7f;
   color: #555;
 }
-
 ::-webkit-selection {
   background: #7f7f7f;
   color: #555;
@@ -40,6 +39,12 @@ a{
 }
 a:hover{
   color: rgb(37,40,43);
+}
+ul{
+  padding: 0;
+}
+li{
+  list-style-type: none;
 }
 /*# sourceMappingURL=reset.css.map */
 
@@ -78,12 +83,14 @@ header .header_search input:focus {
   box-shadow: 0 0 5px 2px rgba(0, 0, 219, 0.5);
 }
 header .header_info .header_info_notice{
-  margin-right: 10px;
+  margin-right: 30px;
   cursor: pointer;
+  /* width: 40px;
+  height: 40px; */
 }
 header .header_info .header_info_notice img{
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
 }
 header .header_info .header_info_image{
   width: 40px;
@@ -190,4 +197,41 @@ footer .footer-title{
 footer .footer-text{
   color: white;
   font-size: 16px;
+}
+
+
+/* notice list */
+.header_info .box_notice{
+  position: relative;
+}
+.header_info .notice_list{
+  background-color: rgb(13, 202, 240);
+  border-radius: 10px;
+  padding: 10px;
+  position: absolute;
+  top: 45px;
+  right: 20px;
+  width: 300px;
+  /*height: 400px;*/
+  min-height: 100px;
+  max-height: 400px;
+   display: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* display: none; */
+}
+.header_info .notice_list .notice_item{
+  background-color: white;
+  padding: 10px;
+  list-style-type: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #5a5a5a;
+}
+.header_info .notice_list .notice_item .notice_item_date{
+  font-size: 10px;
+  font-weight: 500;
+  color: #0dcaf0;
 }

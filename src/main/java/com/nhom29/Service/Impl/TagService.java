@@ -1,9 +1,13 @@
 package com.nhom29.Service.Impl;
+
 import com.nhom29.Model.ERD.Tag;
 import com.nhom29.Repository.TagRepository;
 import com.nhom29.Service.Inter.TagInter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,5 +45,10 @@ public class TagService implements TagInter {
         Optional<Tag> tag = tagRepo.findTagByName(name);
         if( tag.isEmpty()) return null;
         return tag.get();
+    }
+
+    @Override
+    public Page<Tag> getTagInPage(Integer page) {
+        return tagRepo.findAll(PageRequest.of(page,6).withSort(Sort.by("thoigiantao")));
     }
 }

@@ -62,17 +62,94 @@ function limitToOneCharacterAndMoveCaret(input) {
 
 
 
-// preloading
-const buttonTaoBaiViet = document.querySelector(".tao_bai_viet")
-const buttonLoadingTaoBaiViet = document.querySelector(".button_loading");
-const inputTieuDe = document.querySelector(".input_title")
-const inputNoiDung = document.querySelector(".input_noi_dung")
 
-console.log(buttonLoadingTaoBaiViet)
-console.log(buttonTaoBaiViet)
-buttonTaoBaiViet.addEventListener("click", ()=>{
-    if( inputNoiDung.value != "" && inputTieuDe.value != ""){
-        buttonTaoBaiViet.style.display = "none";
-        buttonLoadingTaoBaiViet.style.display = "inline-block";
-    }
+
+// websocket 
+const connect = () => {
+    var socket = new SockJS("/ws");
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, connectSuccess, connectError);
+}
+
+const connectSuccess = () => {
+    console.log("Kết nối thành công");
+    // Đăng ký lắng nghe cho kênh "/notice/all" sau khi kết nối thành công
+    stompClient.subscribe("/notice/all", receiverMessage);
+}
+
+const connectError = () => {
+    console.log("Kết nối không thành công");
+}
+
+window.addEventListener("load", () => {
+    connect();
 })
+
+const sendNotice = (message) =>{
+    var notice = {
+        baidang : message.baidang,
+        nguoicomment : message.nguoi,
+    }
+    stompClient.send("/app/comment", {}, JSON.stringify(notice));
+}
+
+
+
+// Trong mã JavaScript
+const arrayFollowElement = document.querySelector(".array_follow");
+const arrayFollowData = JSON.parse(arrayFollowElement.getAttribute("data-array-follow"));
+const infoId = document.querySelector("header .info_id");
+const noticeList = document.querySelector(".box_notice .notice_list");
+const noticeNumber = document.querySelector(".header_info .notice_number");
+const receiverMessage = (payload) =>{
+    var message = JSON.parse(payload.body);
+    if( arrayFollowData != null ){
+        console.log("Nhận tin nhắn mới :", arrayFollowData.includes(message.baiDangId));
+        console.log("Nhận tin nhắn mới :", message.nguoiCommentId != infoId );
+        if( arrayFollowData.includes(message.baiDangId) && message.nguoiCommentId != infoId ){
+
+            console.log("Nhận tin nhắn mới :", message.tenNguoiComment);
+            noticeNumber.textContent = +noticeNumber.textContent + 1;
+            const a = document.createElement("a");
+            const div = document.createElement("div");
+            const li = document.createElement("li");
+            li.textContent ="Bài đăng của bạn đã có " + message.tenNguoiComment + " bình luận";
+            const span = document.createElement("span");
+            span.textContent = message.thoiGian;
+            div.appendChild(li);
+            div.appendChild(span);
+            div.classList.add("notice_item");
+            a.appendChild(div);
+            a.href = window.location.origin + "/question/" + message.baiDangId;
+            div.style.backgroundColor = "#d9d4d4";
+            // noticeList.appendChild(a);
+            if (noticeList.firstChild) {
+                noticeList.insertBefore(a, noticeList.firstChild);
+            } else {
+                noticeList.appendChild(a);
+            }
+        }
+    }
+}
+
+// hien, tat thong bao
+const buttonNotice = document.querySelector(".box_notice .header_info_notice");
+
+const dispayList = () => {
+    if (noticeList.style.display === "none" || noticeList.style.display === "") {
+        noticeList.style.display = "block";
+    } else {
+        noticeList.style.display = "none";
+    }
+};
+
+
+buttonNotice.addEventListener("click", dispayList);
+
+document.body.addEventListener('click', function(event) {
+    if (event.target !== buttonNotice && !buttonNotice.contains(event.target)) {
+        noticeList.style.display = 'none';
+    }
+});
+
+

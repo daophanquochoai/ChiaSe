@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,13 +19,12 @@ public class ThongBao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "NguoiNhanId", nullable = false)
-    private ThongTin nguoinhan;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "thongbao")
+    private List<ThongBao_ThongTin> thongBaoThongTin = new ArrayList<>();
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn( name = "BaiDangId", nullable = false)
     private BaiDang baidang;
-    @Column( columnDefinition = "TEXT", nullable = false)
+    @Column( columnDefinition = "NTEXT", nullable = false)
     private String noidung;
     @Column( nullable = false, columnDefinition = "DATETIME")
     private LocalDateTime thoigiantao;

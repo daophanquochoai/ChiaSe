@@ -36,10 +36,14 @@ public class ThongTin {
     private TaiKhoan_ThongTin taiKhoanThongTin;
     @Column(columnDefinition = "varchar(20)")
     private String providerId;
-    @ManyToMany(mappedBy = "luu", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "luu", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BaiDang> baiDang_Luu = new ArrayList<>();
     @ManyToMany(mappedBy = "like", cascade = CascadeType.ALL)
     private List<BaiDang> baiDang_Like = new ArrayList<>();
     @OneToMany(mappedBy = "thongTin", fetch = FetchType.EAGER)
     private List<BaiDang> baiDangs = new ArrayList<>();
+    @OneToMany(mappedBy = "thongTin", fetch = FetchType.EAGER)
+    private List<ThongBao_ThongTin> thongBaoThongTin = new ArrayList<>();
+    @OneToMany(mappedBy = "thongTin", fetch = FetchType.EAGER)
+    private List<BinhLuan> binhLuans;
 }

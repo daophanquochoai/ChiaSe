@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -206,6 +208,25 @@ public class XuLiController {
         }catch (Exception ex){
             return "redirect:/error";
         }
+    }
+    @PostMapping("/user/{userId}")
+    public String editUser(@PathVariable Long userId,
+                           @ModelAttribute("infoXem") ThongTin thongTin,
+                           @RequestParam(value = "avt", required = false) MultipartFile file) throws IOException {
+        Optional<ThongTin> thongTinGoc = thongTinInter.layThongTin(userId);
+        if( thongTinGoc.isEmpty()) return "error";
+        if( !file.isEmpty() ){
+            String url = cloudinaryInter.uploadFile( file);
+            thongTinGoc.get().setAnhDaiDien(url);
+        }
+        thongTinGoc.get().setHo(thongTin.getHo());
+        thongTinGoc.get().setTen(thongTin.getTen());
+        thongTinGoc.get().setSdt(thongTin.getSdt());
+        thongTinGoc.get().setTruong(thongTin.getTruong());
+        thongTinGoc.get().setEmail(thongTin.getEmail());
+        thongTinGoc.get().setGioiThieu(thongTin.getGioiThieu());
+        thongTinInter.updateThongTin(thongTinGoc.get());
+        return "redirect:/user/" + userId;
     }
 }
 

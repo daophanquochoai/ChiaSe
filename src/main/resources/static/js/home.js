@@ -89,3 +89,21 @@ buttonAddTag.addEventListener("click", ()=>{
 
 })
 
+// const text = document.querySelector(".text");
+
+// text.addEventListener("click", ()=>{
+//     sendNotice();
+// })
+
+// preloading
+const buttonTaoBaiViet = document.querySelector(".tao_bai_viet")
+const buttonLoadingTaoBaiViet = document.querySelector(".button_loading");
+const inputTieuDe = document.querySelector(".input_title")
+const inputNoiDung = document.querySelector(".input_noi_dung")
+
+buttonTaoBaiViet.addEventListener("click", ()=>{
+    if( inputNoiDung.value != "" && inputTieuDe.value != ""){
+        buttonTaoBaiViet.style.display = "none";
+        buttonLoadingTaoBaiViet.style.display = "inline-block";
+    }
+})

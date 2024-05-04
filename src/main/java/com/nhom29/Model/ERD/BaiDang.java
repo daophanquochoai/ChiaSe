@@ -44,12 +44,12 @@ public class BaiDang {
     private List<Tag> tag = new ArrayList<>();
     @ManyToMany( fetch = FetchType.EAGER)
     @JoinTable(
-            name = "BaiDang_User",
+            name = "BaiDang_ThongTin_TheoDoi",
             joinColumns = {
                     @JoinColumn(name = "BaiDang_ID")
             },
             inverseJoinColumns = {
-                    @JoinColumn(name = "nguoiLikeId")
+                    @JoinColumn(name = "nguoiTheoDoiId")
             }
     )
     private List<ThongTin> luu = new ArrayList<>();

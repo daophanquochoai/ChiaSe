@@ -1,9 +1,8 @@
 package com.nhom29.Cotnroller;
 
-import com.nhom29.DTO.BaiDangDTO;
-import com.nhom29.DTO.Infomation;
-import com.nhom29.DTO.Pagination;
-import com.nhom29.DTO.ThongTinDangKi;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhom29.DTO.*;
 import com.nhom29.Model.ERD.*;
 import com.nhom29.Service.Inter.*;
 import com.nhom29.Service.Oauth2.CurrentUser;
@@ -22,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -34,6 +34,7 @@ public class HomeController {
     private final ValueApp valueApp;
     private final BinhLuanInter binhLuanInter;
     private final CloudinaryInter cloudinaryInter;
+    private final ThongBaoInter thongBaoInter;
 
 
     public static String uploadDir =System.getProperty("user.dir") + "/src/main/resources/static/images";
@@ -50,18 +51,21 @@ public class HomeController {
                        @RequestParam(value = "page", defaultValue = "1") int page,
                        @RequestParam(value = "sort", defaultValue = "thoigiantao") String sort,
                        Authentication authentication
-    ) {
+    ) throws JsonProcessingException {
+        ThongTin thongTin;
         if( oAuth2UserDetailCustom == null ){
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             if( thongTinInter.layThongTinByUserName(userDetails.getUsername()).isEmpty())  return "redirect:/logout";
             // infomation about user logined
             model.addAttribute("info", thongTinInter.layThongTinByUserName(userDetails.getUsername()).get());
+            thongTin = thongTinInter.layThongTinByUserName(userDetails.getUsername()).get();
         }else{
             if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
                 return "redirect:/logout";
             }
             // infomation about user logined
             model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
+            thongTin = thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get();
         }
         //infomation about BaiDang was paginationed and sort feilded
         model.addAttribute("page", baiDangInter.timBaiDangPhanTrang((page-1), numberPage, "like"));
@@ -75,6 +79,21 @@ public class HomeController {
         // value from application.p
         Infomation infomation = new Infomation(valueApp.URLImage, valueApp.shortCutIcon);
         model.addAttribute("image", infomation);
+
+        // all notice
+        model.addAttribute("notice", thongBaoInter.layThongBaoTheoNguoi(thongTin.getId()));
+        model.addAttribute("noticeNotSeen", thongBaoInter.thongBaoChuaXem(thongTin.getId()));
+
+        List<Object> baiDangIdsList = thongTin.getBaiDang_Luu()
+                .stream()
+                .map(b -> b.getId())
+                .collect(Collectors.toList());;
+
+        // Convert the list to JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(baiDangIdsList);
+        // Pass the jsonString to your Thymeleaf template
+        model.addAttribute("baiDangJson", jsonString);
         return "home";
     }
     // view bi chan
@@ -124,9 +143,6 @@ public class HomeController {
                         Tag newTag = new Tag();
                         newTag.setTenTag(tagName);
                         newTag.setThoigiantao(LocalDateTime.now());
-                        System.out.println("=====================");
-                        log.info("{}",newTag);
-                        System.out.println("======================");
                         b.getTag().add(newTag);
                     }
                 }
@@ -142,18 +158,13 @@ public class HomeController {
     }
     // redict page question
     @GetMapping("/question")
-    public String pageQuestion(){
-        return "question";
-    }
-
-    // redict page detail question
-    @GetMapping("/question/{baiDangId}")
-    public String pageDetaiQuestion(Model model,@CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
-                                    @PathVariable Long baiDangId,
-                                    Authentication authentication,
-                                    @RequestParam(value = "page", defaultValue = "3") Integer soluong,
-                                    @RequestParam(value = "sort", defaultValue = "macdinh") String sort
-                                    ){
+    public String pageQuestion(
+            Model model,
+            @CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
+            Authentication authentication
+    ) throws JsonProcessingException {
+        //================================thong tin trang chu================================
+        // info of account login
         ThongTin thongTin = new ThongTin();
         if( oAuth2UserDetailCustom == null ){
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -169,6 +180,52 @@ public class HomeController {
             // infomation about user logined
             model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
         }
+
+        // all notice
+        model.addAttribute("notice", thongBaoInter.layThongBaoTheoNguoi(thongTin.getId()));
+        model.addAttribute("noticeNotSeen", thongBaoInter.thongBaoChuaXem(thongTin.getId()));
+        // information from application file
+        Infomation infomation = new Infomation(valueApp.getURLImage(), valueApp.getShortCutIcon());
+        model.addAttribute("image", infomation);
+
+        List<Object> baiDangIdsList = thongTin.getBaiDang_Luu()
+                .stream()
+                .map(b -> b.getId())
+                .collect(Collectors.toList());;
+
+        // Convert the list to JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(baiDangIdsList);
+        // Pass the jsonString to your Thymeleaf template
+        model.addAttribute("baiDangJson", jsonString);
+        return "question";
+    }
+
+    // redict page detail question
+    @GetMapping("/question/{baiDangId}")
+    public String pageDetaiQuestion(Model model,@CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
+                                    @PathVariable Long baiDangId,
+                                    Authentication authentication,
+                                    @RequestParam(value = "page", defaultValue = "3") Integer soluong,
+                                    @RequestParam(value = "sort", defaultValue = "macdinh") String sort
+                                    ) throws JsonProcessingException {
+        ThongTin thongTin = new ThongTin();
+        if( oAuth2UserDetailCustom == null ){
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            if( thongTinInter.layThongTinByUserName(userDetails.getUsername()).isEmpty())  return "redirect:/logout";
+            thongTin = thongTinInter.layThongTinByUserName(userDetails.getUsername()).get();
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTinByUserName(userDetails.getUsername()).get());
+        }else{
+            if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
+                return "redirect:/logout";
+            }
+            thongTin = thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get();
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
+        }
+        // doc thong bao
+        thongBaoInter.docThongBaoTheoNguoi(thongTin.getId(), baiDangId);
         // deltai baidang
         Optional<BaiDang> baiDang = baiDangInter.layChiTietBaiDang(baiDangId);
         if( baiDang.isEmpty()) return "redirect:/home/error=baidangId";
@@ -201,7 +258,20 @@ public class HomeController {
         BinhLuan binhLuan = new BinhLuan();
         model.addAttribute("format", binhLuan);
         // sort
-        model.addAttribute("sort", sort);
+        // all notice
+        model.addAttribute("notice", thongBaoInter.layThongBaoTheoNguoi(thongTin.getId()));
+        model.addAttribute("noticeNotSeen", thongBaoInter.thongBaoChuaXem(thongTin.getId()));
+
+        List<Object> baiDangIdsList = thongTin.getBaiDang_Luu()
+                .stream()
+                .map(b -> b.getId())
+                .collect(Collectors.toList());;
+
+        // Convert the list to JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(baiDangIdsList);
+        // Pass the jsonString to your Thymeleaf template
+        model.addAttribute("baiDangJson", jsonString);
         return "chiTietCauHoi";
     }
 
@@ -258,22 +328,102 @@ public class HomeController {
 
     @GetMapping("/tag")
     public String pageTag(Model model,@CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
-                          Authentication authentication){
+                          Authentication authentication,
+                          @RequestParam(value = "sort", defaultValue = "popular") String sort,
+                          @RequestParam(value = "page", defaultValue = "0") Integer page
+
+    ) throws JsonProcessingException {
+        //================================thong tin trang chu================================
+        // info of account login
+        ThongTin thongTin = new ThongTin();
         if( oAuth2UserDetailCustom == null ){
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             if( thongTinInter.layThongTinByUserName(userDetails.getUsername()).isEmpty())  return "redirect:/logout";
+            thongTin = thongTinInter.layThongTinByUserName(userDetails.getUsername()).get();
             // infomation about user logined
             model.addAttribute("info", thongTinInter.layThongTinByUserName(userDetails.getUsername()).get());
         }else{
             if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
                 return "redirect:/logout";
             }
+            thongTin = thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get();
             // infomation about user logined
             model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
         }
+
+        // all notice
+        model.addAttribute("notice", thongBaoInter.layThongBaoTheoNguoi(thongTin.getId()));
+        model.addAttribute("noticeNotSeen", thongBaoInter.thongBaoChuaXem(thongTin.getId()));
         // information from application file
         Infomation infomation = new Infomation(valueApp.getURLImage(), valueApp.getShortCutIcon());
         model.addAttribute("image", infomation);
+
+        List<Object> baiDangIdsList = thongTin.getBaiDang_Luu()
+                .stream()
+                .map(b -> b.getId())
+                .collect(Collectors.toList());;
+
+        // Convert the list to JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(baiDangIdsList);
+        // Pass the jsonString to your Thymeleaf template
+        model.addAttribute("baiDangJson", jsonString);
+        //================= thong tin về tag =================================
+        model.addAttribute("tags", tagInter.getTagInPage(page));
+
         return "tag";
+    }
+
+    //===================USER_DETAIL===============
+    @GetMapping("/user/{id}")
+    public String pageUserDetail( Model model,
+                                  @PathVariable Long id,
+                                  @CurrentUser OAuth2UserDetailCustom oAuth2UserDetailCustom,
+                                  Authentication authentication
+    ) throws JsonProcessingException {
+        //================================thong tin trang chu================================
+        // info of account login
+        ThongTin thongTin = new ThongTin();
+        if( oAuth2UserDetailCustom == null ){
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            if( thongTinInter.layThongTinByUserName(userDetails.getUsername()).isEmpty())  return "redirect:/logout";
+            thongTin = thongTinInter.layThongTinByUserName(userDetails.getUsername()).get();
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTinByUserName(userDetails.getUsername()).get());
+        }else{
+            if (thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).isEmpty()) {
+                return "redirect:/logout";
+            }
+            thongTin = thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get();
+            // infomation about user logined
+            model.addAttribute("info", thongTinInter.layThongTin(oAuth2UserDetailCustom.getId()).get());
+        }
+
+        // all notice
+        model.addAttribute("notice", thongBaoInter.layThongBaoTheoNguoi(thongTin.getId()));
+        model.addAttribute("noticeNotSeen", thongBaoInter.thongBaoChuaXem(thongTin.getId()));
+        // information from application file
+        Infomation infomation = new Infomation(valueApp.getURLImage(), valueApp.getShortCutIcon());
+        model.addAttribute("image", infomation);
+
+        List<Object> baiDangIdsList = thongTin.getBaiDang_Luu()
+                .stream()
+                .map(b -> b.getId())
+                .collect(Collectors.toList());;
+
+        // Convert the list to JSON string
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(baiDangIdsList);
+        // Pass the jsonString to your Thymeleaf template
+        model.addAttribute("baiDangJson", jsonString);
+        //=======================================thong tin nguoi can xem===============================================
+        Optional<ThongTin> thongTinXem = thongTinInter.layThongTin(id);
+        if( thongTinXem.isEmpty()) return "error";
+        //infomation
+        model.addAttribute("infoXem", thongTinXem.get());
+        // info bai dang
+        UserDetail userDetail = new UserDetail(thongTinXem.get().getBinhLuans().size(), thongTinXem.get().getBaiDangs().size());
+        model.addAttribute("colcu", userDetail);
+        return "user-detail";
     }
 }
