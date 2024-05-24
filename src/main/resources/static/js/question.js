@@ -4,7 +4,6 @@ const tagGroup = document.querySelector(".section_question .section_box .tag_gro
 
 selectTag.addEventListener("change", ()=>{
     var selectedOption = selectTag.options[selectTag.selectedIndex];
-    console.log("Selected option value: " + selectedOption.value);
     tagGroup.appendChild(createTag(selectedOption.value))
 })
 
@@ -39,13 +38,17 @@ const createTag = (tagName) => {
     deleteTagInSelect(tagName);
     // action remove
     iconRemove.addEventListener("click", ()=>{
-       tagGroup.removeChild(iconRemove.parentElement)
-       const option = document.createElement("option");
-       option.value = tagName;
-       option.text = tagName;
-       selectTag.appendChild(option);
+        xoaTag(iconRemove, tagName);
     })
     return span;
+}
+
+const xoaTag = (e, tagName) =>{
+    tagGroup.removeChild(e.parentElement)
+    const option = document.createElement("option");
+    option.value = tagName;
+    option.text = tagName;
+    selectTag.appendChild(option);
 }
 
 const deleteTagInSelect = (value) => {

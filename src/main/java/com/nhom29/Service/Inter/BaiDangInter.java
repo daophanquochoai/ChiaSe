@@ -1,5 +1,6 @@
 package com.nhom29.Service.Inter;
 
+import com.nhom29.DTO.pageQuestion_BaiDang;
 import com.nhom29.Model.ERD.BaiDang;
 import org.springframework.data.domain.Page;
 
@@ -10,5 +11,9 @@ public interface BaiDangInter {
     Optional<BaiDang> saveBaiDang(BaiDang baiDang);
     Integer getNumberPage();
     Optional<BaiDang> layChiTietBaiDang( Long id);
+    pageQuestion_BaiDang timBaiDangPhanTrangVaLoc(int offset, int pageSize, String sort, String filter, String[] tagUsed, String q);
+    Integer tongBaiDang();
+    void deleteQuestion( Long baidang );
+    pageQuestion_BaiDang layBaiDangTheoDoi( Long thongtinId, Integer soluong, String q);
 
 }

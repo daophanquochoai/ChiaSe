@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class NoticeMessageReceive {
     private Long baiDangId;
+    private Long nguoiDangId;
     private String tenNguoiComment;
     private Long nguoiCommentId;
     private LocalDateTime thoiGian;

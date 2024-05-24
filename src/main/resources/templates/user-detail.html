@@ -80,7 +80,7 @@
                 <a th:href="@{/tag}" class="navbar_items no_action">
                     <p>Tag</p>
                 </a>
-                <a th:href="@{/Saved}" class="navbar_items no_action">
+                <a th:href="@{/saved}" class="navbar_items no_action">
                     <p>Saved</p>
                 </a>
                 <div class="navbar_items action">
@@ -109,6 +109,7 @@
                                     data-bs-target="#staticBackdrop" name="edit-info">
                                 Edit profit
                             </button>
+                            <a th:href="@{/logout}"><button class="btn btn-danger">Logout</button></a>
 
                             <!-- Modal -->
                             <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -191,12 +192,49 @@
                                 <div class="post-content">
                                     <th:block th:each=" b : ${infoXem.getBaiDangs()}">
                                         <div class="post-item">
-                                            <div class="item-text">
+                                            <div class="item-text d-flex" style="width: 40%; overflow: hidden;">
                                                 <i class="fa-solid fa-message"></i>
                                                 <a th:href="@{'/question/' + ${b.id}}" th:text="${b.tieude}"></a>
                                             </div>
                                             <div class="date-create" th:text="${b.thoigiantao}"></div>
+                                            <div data-bs-toggle="modal" th:data-bs-target="'#deletePost' + ${b.id}" style="cursor:pointer;">
+                                                <i class="fa-solid fa-trash" style="color: #18864b;"></i>
+                                            </div>
                                         </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" th:id="'deletePost' + ${b.id}" tabindex="-1" th:aria-labelledby="'exampleModalLabel' + ${b.id}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Do you want delete question :</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="w-100 mb-3" style="word-wrap: break-word;" >
+                                                            <span style="color: #dc3545">Title :</span>
+                                                            <p style="word-wrap: break-word;" th:text="${b.tieude}"></p>
+                                                        </div>
+                                                        <div class="w-100 break-word">
+                                                            <span style="color: #dc3545">Content :</span>
+                                                            <p style="word-wrap: break-word;" th:text="${b.noidung}"></p>
+                                                        </div>
+                                                        <span style="font-size: 12px; font-weight: 700" th:text="${b.thoigiantao}"></span>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <form th:action="@{'/xuli/delete/question/' + ${b.id}}" method="POST">
+                                                            <input style="display: none" name="purpose" th:value="${request.requestURI}">
+                                                            <button type="submit" th:onclick="'handleDeletePreloading(\'' + ${b.id}+ '\')'" th:class="'btn btn-danger button_delete' + ${b.id}">Delete</button>
+                                                            <button th:class="'btn btn-danger button_delete_loading button_delete_loading' + ${b.id}" type="button" disabled>
+                                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                                <span style="color:white">Đang xóa...</span>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--  End Modal  -->
                                     </th:block>
                                 </div>
                             </div>

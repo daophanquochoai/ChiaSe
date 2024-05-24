@@ -17,10 +17,10 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer"
     />
-    <!-- <link rel="stylesheet" th:href="@{/css/reset.css}"> -->
-    <!-- <link rel="stylesheet" th:href="@{/css/question.css}"> -->
-   <link rel="stylesheet" href="../static/css/reset.css" />
-   <link rel="stylesheet" href="../static/css/question.css" />
+     <link rel="stylesheet" th:href="@{/css/reset.css}">
+     <link rel="stylesheet" th:href="@{/css/question.css}">
+<!--   <link rel="stylesheet" href="../static/css/reset.css" />-->
+<!--   <link rel="stylesheet" href="../static/css/question.css" />-->
     <link rel="shortcut icon" type="image/png" th:href="${image.getShortCutIcon()}" />
 </head>
 
@@ -42,7 +42,9 @@
     >
         <p>Products</p>
         <div class="header_search_input w-100">
-            <input />
+            <input type="text" th:value="${q    }"
+                   onkeypress="handleKeyPress(event, this.value)"
+            />
         </div>
     </div>
     <div class="header_info d-flex align-items-center">
@@ -72,7 +74,6 @@
     </div>
 </header>
     <section class="section_body d-flex flex-colum">
-        <!--       thanh navabar         -->
         <nav class="navbar_list">
             <a th:href="@{/home}" class="navbar_items no_action">
                 <p>Home</p>
@@ -83,15 +84,15 @@
             <a th:href="@{/tag}" class="navbar_items no_action">
                 <p>Tag</p>
             </a>
-            <a th:href="@{/Saved}" class="navbar_items no_action">
+            <a th:href="@{/saved}" class="navbar_items no_action">
                 <p>Saved</p>
             </a>
-            <a th:href="@{/Users}" class="navbar_items no_action">
+            <a th:href="@{/users}" class="navbar_items no_action">
                 <p>Users</p>
             </a>
         </nav>
         <!-- seclect question -->
-        <div class="section_question d-flex flex-column w-100">
+        <div class="section_question d-flex flex-column" style="width: 80%;">
             <div class="section_question_left">
                 <div class="section_question_top d-flex justify-content-between">
                     <div class="section_question_top_title">
@@ -103,27 +104,27 @@
                 <div class="d-flex section-question-bottom">
                     <div class="question-bottom-right d-flex flex-column w-75 h-100">
                         <div class="question-bottom-top d-flex justify-content-between">
-                            <p class="bottom-top-title">7,345,478 questions </p>
+                            <p class="bottom-top-title"><th:block th:text="${totalQuestion}"></th:block> questions </p>
                             <div class="bottom-top-filter d-flex justify-content-center align-items-center"><i class="fa-solid fa-filter" style="color: rgb(121, 220, 240);"></i><span> Filter</span></div>
                         </div>
-                        <form class="section_box">
+                        <form class="section_box" th:action="@{/xuli/question/filter}" method="POST" >
                             <div class="d-flex justify-content-between">
                                 <div class="question-filter">
                                     <div class="question-title">Filter by</div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="filter" id="filter" value="no" checked>
-                                        <label class="form-check-label" for="filter">
+                                        <input class="form-check-input" type="radio" name="filter" id="filterNo" value="noanswer" th:checked="${filter == 'noanswer'}">
+                                        <label class="form-check-label" for="filterNo">
                                           No answer
                                         </label>
                                       </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="filter" id="filter" value="yes" checked>
-                                        <label class="form-check-label" for="filter">
+                                        <input class="form-check-input" type="radio" name="filter" id="filterMost" value="mostanswer" th:checked="${filter == 'mostanswer'}">
+                                        <label class="form-check-label" for="filterMost">
                                             Most answer
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="filter" id="filter" value="default" checked>
+                                        <input class="form-check-input" type="radio" name="filter" id="filter" value="default" th:checked="${filter == 'default'}">
                                         <label class="form-check-label" for="filter">
                                             Default
                                         </label>
@@ -133,26 +134,26 @@
                                 <div class="question-sort">
                                     <div class="question-title">Sorted by</div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sort" id="sort" value="new" checked>
-                                        <label class="form-check-label" for="exampleRadios1">
+                                        <input class="form-check-input" type="radio" name="sort" id="sortNew" value="newest" th:checked="${sort == 'newest'}">
+                                        <label class="form-check-label" for="sortNew">
                                           Newest
                                         </label>
                                       </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sort" id="sort" value="old" checked>
-                                        <label class="form-check-label" for="exampleRadios1">
+                                        <input class="form-check-input" type="radio" name="sort" id="sortOld" value="oldest" th:checked="${sort == 'oldest'}">
+                                        <label class="form-check-label" for="sortOld">
                                             Oldest
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sort" id="sort" value="like" checked>
-                                        <label class="form-check-label" for="exampleRadios1">
+                                        <input class="form-check-input" type="radio" name="sort" id="sortLike" value="favourite" th:checked="${sort == 'favourite'}">
+                                        <label class="form-check-label" for="sortLike">
                                             Favourite
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="sort" id="sort" value="default" checked>
-                                        <label class="form-check-label" for="exampleRadios1">
+                                        <input class="form-check-input" type="radio" name="sort" id="sort" value="default" th:checked="${sort == 'default'}">
+                                        <label class="form-check-label" for="sort">
                                             Default
                                         </label>
                                     </div>
@@ -162,64 +163,180 @@
                                     <div class="input-group mb-3">
                                         <label class="input-group-text" for="inputGroupSelect01">Tags</label>
                                         <select class="form-select" id="inputGroupSelect01">
-                                          <option disabled selected></option>
-                                          <option value="1123123">One</option>
-                                          <option value="2">Two</option>
-                                          <option value="3">Three</option>
+                                            <option disabled selected></option>
+                                            <th:block th:each=" t : ${tags}">
+                                                <option th:value="${t.tenTag}" th:text="${t.tenTag}"></option>
+                                            </th:block>
                                         </select>
                                     </div>
                                     <div class="tag_group d-flex flex-wrap">
                                         <!-- container tag -->
+                                        <th:block th:each=" t : ${tagUsed}">
+                                            <span class="p-1" style="outline: rgb(27, 133, 183) solid 1px; color: rgb(244, 220, 237); margin: 3px 5px; border-radius: 5px; position: relative;">
+                                                <th:block th:text="${t}"></th:block>
+                                            <input name="tags" style="display: none;" th:value = "${t}">
+                                            <i th:onclick="@{'xoaTag(this,\'' + ${t} + '\')'}" class="fa-solid fa-circle-xmark" style="color: rgb(76, 139, 2); position: absolute; top: -6px; right: -6px; cursor: pointer;"></i>
+                                        </span>
+                                        </th:block>
                                     </div>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between p-3 align-items-center">
                                 <button type="submit" class="button_apply btn btn-info">Apply</button>
-                                <button type="submit" class="button_cancel btn btn-outline-info">Cancel</button>
+                                <button th:onclick="'window.location.href = \'' + @{/question} + '\''"  type="button" class="button_cancel btn btn-outline-info">Cancel</button>
                             </div>
                         </form>
         
-                        <div class="section_list mb-3 gap-4 p-3 "> 
-                            <div class="section_body_item d-flex align-items-center justify-content-between" th:onclick="'window.location.href = \'' + @{/question/{id}(id=${bai.Id})} + '\''">
-                                <!--       list baidang         -->
-                                <div class="item_left">
-                                    <div class="item_left_avt">
-                                        <a th:href="@{/user/{id}(id=${bai.getThongTin().getId()})}">
-                                            <img class="image_link" th:src="${bai.getThongTin().getAnhDaiDien()}" alt="Avatar">
-<!--                                                        <img class="image_link" th:unless="${#strings.startsWith(bai.getThongTin().getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${bai.getThongTin().getAnhDaiDien()})}" alt="Avatar">-->
-                                        </a>
+                        <div class="section_list mb-3 gap-4 p-3 ">
+                            <th:block th:each=" bai : ${page}">
+                                <div class="section_body_item d-flex align-items-center justify-content-between" th:onclick="'window.location.href = \'' + @{/question/{id}(id=${bai.Id})} + '\''">
+                                    <!--       list baidang         -->
+                                    <div class="item_left">
+                                        <div class="item_left_avt">
+                                            <a th:href="@{/user/{id}(id=${bai.getThongTin().getId()})}">
+                                                <img class="image_link" th:src="${bai.getThongTin().getAnhDaiDien()}" alt="Avatar">
+                                                <!--                                                        <img class="image_link" th:unless="${#strings.startsWith(bai.getThongTin().getAnhDaiDien(), 'http')}" th:src="@{/images/{imageName}(imageName=${bai.getThongTin().getAnhDaiDien()})}" alt="Avatar">-->
+                                            </a>
+                                        </div>
+                                        <div
+                                                class="item_left_descrip d-flex flex-column"
+                                        >
+                                            <span
+                                                    th:text="${bai.getLike() != null ? bai.getLike().size() : 0} + ' Likes' "
+                                            ></span>
+                                            <span
+                                                    th:text="${bai.getBinhLuans() != null ? bai.getBinhLuans().size() : 0} + ' Answers'"
+                                            ></span>
+                                        </div>
                                     </div>
-                                    <div
-                                            class="item_left_descrip d-flex flex-column"
-                                    >
-                                <span
-                                        th:text="${bai.getLike() != null ? bai.getLike().size() : 0} + ' Likes' "
-                                >123</span>
-                                        <span
-                                                th:text="${bai.getBinhLuans() != null ? bai.getBinhLuans().size() : 0} + ' Answers'"
-                                        >123</span>
-                                    </div>
-                                </div>
-                                <div class="item_right">
-                                    <p
-                                            class="item_right_title"
-                                            th:text="${bai.getTieude()}"
-                                    >123123123123</p>
-                                    <div class="d-flex item_right_regex">
-                                <span th:each="t : ${bai.getTag()}"
-                                      class="bg-info bg-gradient"
-                                      th:text="${t.getTenTag()}">
-                                123123123</span>
-                                    </div>
+                                    <div class="item_right">
+                                        <p
+                                                class="item_right_title"
+                                                th:text="${bai.getTieude()}"
+                                        ></p>
+                                        <div class="d-flex item_right_regex">
+                                            <span th:each="t : ${bai.getTag()}"
+                                                  class="bg-info bg-gradient"
+                                                  th:text="${t.getTenTag()}">
+                                            </span>
+                                        </div>
 
+                                    </div>
                                 </div>
+                            </th:block>
                         </div>
+                        <div class="d-flex justify-content-end">
+                            <!--          pagination              -->
+                            <th:block th:if="${pagination.getTotal() > 0 && pagination.getTotal() <= 4}">
+                                <div class="section_body_pagenation">
+                                    <nav aria-label="...">
+                                        <ul class="pagination pagination-sm">
+                                            <th:block th:each="p : ${#numbers.sequence(1, pagination.getTotal())}">
+                                                <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                    <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                        <span class="page-link" th:text="${p}"></span>
+                                                    </th:block>
+                                                    <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                        <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + p)
+                                                                :
+                                                                '?' + request.queryString + '&page=' + p)
+                                                             :
+                                                            '?page=' + p}}" th:text="${p}"></a>
+                                                    </th:block>
+                                                </li>
+                                            </th:block>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </th:block>
+                            <!--       panigation         -->
+                            <th:block th:if="${pagination.getTotal() > 4}">
+                                <div class="section_body_pagenation">
+                                    <nav aria-label="...">
+                                        <ul class="pagination pagination-sm">
+                                            <th:block th:if="${pagination.getCurrentPage() == 1}">
+                                                <th:block th:each="p : ${#numbers.sequence(1, 3)}">
+                                                    <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                        <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:text="${p}"></a>
+                                                        </th:block>
+                                                        <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + p)
+                                                                :
+                                                                '?' + request.queryString + '&page=' + p)
+                                                             :
+                                                            '?page=' + p}}" th:text="${p}"></a>
+                                                        </th:block>
+                                                    </li>
+                                                </th:block>
+                                                <li><span class="page-link">...</span></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + pagination.getTotal())
+                                                                :
+                                                                '?' + request.queryString + '&page=' + pagination.getTotal())
+                                                             :
+                                                            '?page=' + p}}" th:text="${pagination.getTotal()}"></a>
+                                                </li>
+                                            </th:block>
+                                            <th:block th:if="${pagination.getCurrentPage() == pagination.getTotal() && pagination.getCurrentPage() != 1}">
+                                                <th:block th:each="p : ${#numbers.sequence(pagination.getCurrentPage()-2, pagination.getCurrentPage())}">
+                                                    <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                        <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:text="${p}"></a>
+                                                        </th:block>
+                                                        <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + p)
+                                                                :
+                                                                '?' + request.queryString + '&page=' + p)
+                                                             :
+                                                            '?page=' + p}}" th:text="${p}"></a>
+                                                        </th:block>
+                                                    </li>
+                                                </th:block>
+                                            </th:block>
+                                            <th:block th:if="${pagination.getCurrentPage() > 1 && pagination.getCurrentPage() < pagination.getTotal()}">
+                                                <th:block th:each="p : ${#numbers.sequence(pagination.getCurrentPage()-1, pagination.getCurrentPage()+1)}">
+                                                    <li th:class="${p == pagination.getCurrentPage() ? 'page-item active' : 'page-item'}">
+                                                        <th:block th:if="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:text="${p}"></a>
+                                                        </th:block>
+                                                        <th:block th:unless="${p == pagination.getCurrentPage()}">
+                                                            <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + p)
+                                                                :
+                                                                '?' + request.queryString + '&page=' + p)
+                                                             :
+                                                            '?page=' + p}}" th:text="${p}"></a>
+                                                        </th:block>
+                                                    </li>
+                                                </th:block>
+                                                <th:block th:if="${pagination.getCurrentPage() + 1 < pagination.getTotal()}">
+                                                    <li><a class="page-link">...</a></li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" th:href="@{${request.requestURI} + ${request.queryString != null ?
+                                                             ( request.queryString.contains('page') ?
+                                                                '?' + request.queryString.replace('page='+ pagination.getCurrentPage(), 'page=' + pagination.getTotal())
+                                                                :
+                                                                '?' + request.queryString + '&page=' + pagination.getTotal())
+                                                             :
+                                                            '?page=' + p}}" th:text="${pagination.getTotal()}"></a>
+                                                    </li>
+                                                </th:block>
+                                            </th:block>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </th:block>
                         </div>
-                        <ul class="d-flex gap-3 justify-content-center" style="list-style: none;">
-                            <li class="border p-1 ps-2 pe-2">1</li>
-                            <li class="border p-1 ps-2 pe-2">2</li>
-                            <li class="border p-1 ps-2 pe-2">3</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -260,6 +377,7 @@
  <!-- add baidang -->
  <form th:action="@{/upload}" th:object="${baidang}" method="POST" enctype="multipart/form-data" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <input style="display: none" th:value="${info.getId()}" name="id">
+     <input style="display: none" th:value="@{${request.requestURI} + ${request.queryString != null ?'?' + request.queryString : ''}}" name="purpose">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -323,7 +441,7 @@
             <button type="submit" class="btn btn-info tao_bai_viet" style="color:white">Tạo bài viết</button>
             <button class="btn btn-info button_loading" type="button" disabled>
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span style="color:white">Tạo bài viết</span>
+                <span style="color:white">Đang tạo...</span>
             </button>
           </div>
         </div>
@@ -336,10 +454,11 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <!-- <script th:src="@{/js/base.js}"></script> -->
-    <!-- <script th:src="@{/js/question.js}"></script> -->
-    <script src="../static/js/base.js"></script>
-    <script src="../static/js/modal_question.js"></script>
+     <script th:src="@{/js/base.js}"></script>
+    <script th:src="@{/js/modal_question.js}"></script>
+     <script th:src="@{/js/question.js}"></script>
+<!--    <script src="../static/js/base.js"></script>-->
+<!--    <script src="../static/js/modal_question.js"></script>-->
     <script src="../static/js/question.js"></script>
 </body>
 

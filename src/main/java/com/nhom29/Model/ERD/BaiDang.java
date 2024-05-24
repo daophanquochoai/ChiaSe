@@ -31,7 +31,7 @@ public class BaiDang {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "BaiDang_ID")
     private Set<HinhAnh> hinhAnh = new HashSet<>();
-    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(
             name = "BaiDang_Tag",
             joinColumns = {
@@ -42,7 +42,7 @@ public class BaiDang {
             }
     )
     private List<Tag> tag = new ArrayList<>();
-    @ManyToMany( fetch = FetchType.EAGER)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(
             name = "BaiDang_ThongTin_TheoDoi",
             joinColumns = {
@@ -53,7 +53,7 @@ public class BaiDang {
             }
     )
     private List<ThongTin> luu = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinTable(
             name = "BaiDang_User_Like",
             joinColumns = {

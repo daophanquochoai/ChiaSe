@@ -52,9 +52,19 @@ public class ThongBaoImpl implements ThongBaoInter {
                 thongbao.setNoidung("Bài đăng bạn theo dõi đã có " + nguoicomment.get().getTen() + " bình luận");
                 thongBaoThongTin.setThongbao(thongbao);
                 thongBaoThongTin.setThongTin(t);
-                thongBaoThongTinRepo.save(thongBaoThongTin);
+                System.out.println("====================================");
+                log.info("{}",thongBaoThongTinRepo.save(thongBaoThongTin).getThongTin().getTen());
+                System.out.println("====================================");
             }
         });
+        if( nguoiCommentId != baidang.get().getThongTin().getId()) {
+            thongbao.setNoidung("Bài đăng của bạn đã có " + nguoicomment.get().getTen() + " bình luận");
+            thongBaoThongTin.setThongbao(thongbao);
+            thongBaoThongTin.setThongTin(baidang.get().getThongTin());
+            System.out.println("====================================");
+            log.info("{}", thongBaoThongTinRepo.save(thongBaoThongTin).getThongTin().getTen());
+            System.out.println("====================================");
+        }
     }
 
     @Override

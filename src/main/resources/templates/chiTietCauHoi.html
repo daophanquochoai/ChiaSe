@@ -42,7 +42,9 @@
         <p>Products</p>
         <div class="header_search_input w-100">
             <!-- <div>icon</div> -->
-            <input />
+            <input type="text"
+                   onkeypress="handleKeyPress(event, this.value)"
+            />
         </div>
     </div>
     <div class="header_info d-flex align-items-center">
@@ -82,10 +84,10 @@
         <a th:href="@{/tag}" class="navbar_items no_action">
                 <p>Tag</p>
         </a>
-        <a th:href="@{/Saved}" class="navbar_items no_action">
+        <a th:href="@{/saved}" class="navbar_items no_action">
                 <p>Saved</p>
         </a>
-        <a th:href="@{/Users}" class="navbar_items no_action">
+        <a th:href="@{/users}" class="navbar_items no_action">
                 <p>Users</p>
         </a>
     </nav>
@@ -133,8 +135,6 @@
                                 <a th:href="@{'/xuli/like/' + ${chiTietBaiDang.getId()} +'/' + ${info.getId()} + '/1' }" style="cursor: pointer"><i class="fa-regular fa-heart" style="color: #0dcaf0; font-size: 25px;"></i></a>
                             </th:block>
                         </th:block>
-
-
                     </div>
                     <div class="section_pararaph">
                     <!--          noi dung           -->
@@ -146,12 +146,12 @@
                             </th:block>
                         </div>
                         <div class="section_pararaph_iamge">
-                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div id="carouselExampleControls" style="width: 400px; height: 400px;" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                    <th:block th:if="${chiTietBaiDang.getHinhAnh().size() > 0}">
                                        <th:block th:each="image : ${#numbers.sequence(0, chiTietBaiDang.getHinhAnh().size()-1)}">
-                                           <div th:onclick="modalImage([[${chiTietBaiDang.getHinhAnh()[image].Url}]])" th:class="${image == 0 ? 'active carousel-item text-center ' : 'carousel-item text-center'}">
-                                               <img  class="d-block" style="width: 100%" th:src="${chiTietBaiDang.getHinhAnh()[image].Url}" alt="Avatar">
+                                           <div style="width: 400px; height: 400px;" th:onclick="modalImage([[${chiTietBaiDang.getHinhAnh()[image].Url}]])" th:class="${image == 0 ? 'active carousel-item text-center ' : 'carousel-item text-center'}">
+                                               <img style="width: 100%; height: 200%; object-fit: cover" class="d-block" th:src="${chiTietBaiDang.getHinhAnh()[image].Url}" alt="Avatar">
                                            </div>
                                        </th:block>
                                    </th:block>
@@ -197,12 +197,12 @@
                                     <div class="display_body_pararaph mb-3" th:text="${binhluan.getNoidung()}">
                                     </div>
                                     <div class="body_pararaph_iamge">
-                                        <div th:id="'carousel_' + ${binhluan.getId() + '_' + baidang.getTieuDe()}" class="carousel slide" data-bs-ride="carousel">
+                                        <div th:id="'carousel_' + ${binhluan.getId() + '_' + baidang.getTieuDe()}" style="width: 400px; height: 400px;" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
                                                 <th:block th:if="${binhluan.getHinhAnh().size() > 0}">
-                                                    <th:block th:each="image : ${#numbers.sequence(0, binhluan.getHinhAnh().size()-1)}">
-                                                        <div th:onclick="modalImage([[${binhluan.getHinhAnh()[image].Url}]])" th:class="${image == 0 ? 'active carousel-item text-center ' : 'carousel-item text-center'}">
-                                                            <img  class="d-block" style="width: 100%" th:src="${binhluan.getHinhAnh()[image].Url}" alt="Avatar">
+                                                    <th:block  th:each="image : ${#numbers.sequence(0, binhluan.getHinhAnh().size()-1)}">
+                                                        <div style="width: 400px; height: 400px;" th:onclick="modalImage([[${binhluan.getHinhAnh()[image].Url}]])" th:class="${image == 0 ? 'active carousel-item text-center ' : 'carousel-item text-center'}">
+                                                            <img style="width: 100%; height: 100%;"  class="d-block" th:src="${binhluan.getHinhAnh()[image].Url}" alt="Avatar">
                                                         </div>
                                                     </th:block>
                                                 </th:block>

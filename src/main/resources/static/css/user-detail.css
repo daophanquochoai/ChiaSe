@@ -186,10 +186,10 @@
     transition: background-color 0.3s ease; 
 }
 
-
-
-
-
+/* preloading delete post */
+.button_delete_loading{
+    display: none;
+}
 
 
 

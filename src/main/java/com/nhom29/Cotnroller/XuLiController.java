@@ -9,6 +9,7 @@ import com.nhom29.Service.Inter.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,8 @@ public class XuLiController {
     private final CloudinaryInter cloudinaryInter;
     private final MatKhauTokenInter matKhauTokenInter;
     private final FollowInter followInter;
+    private final BaiDangInter baiDangInter;
+    private final PasswordEncoder passwordEncoder;
 
     // string random identify
     private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
@@ -109,6 +112,24 @@ public class XuLiController {
         }
     }
 
+    @PostMapping("/user/{id}/doimatkhau")
+    @Transactional
+    public String userDoiMatKhau(
+            @RequestParam("password") String password,
+            @PathVariable( value = "id") Long id,
+            @RequestParam(value = "purpose", defaultValue = "") String purpose
+    ){
+        try{
+            Optional<ThongTin> thongtin = thongTinInter.layThongTin(id);
+            if( thongtin.isEmpty()) return "redirect:/email?error=3";
+            thongtin.get().getTaiKhoanThongTin().getTaiKhoan().setPassword(passwordEncoder.encode(password));
+            thongTinInter.updateThongTin(thongtin.get());
+            return "redirect:" + purpose;
+        }catch (Exception ex){
+            return "redirect:/error";
+        }
+    }
+
     // xu li tao tai khoan
     @PostMapping("/taotaikhoan")
     @Transactional
@@ -179,7 +200,8 @@ public class XuLiController {
     public String follow(
             @PathVariable("baidangId") Long baidangId,
             @PathVariable("thongtinId") Long thongtinId,
-            @PathVariable("option") Integer option
+            @PathVariable("option") Integer option,
+            @RequestParam(value = "purpose", required = false) String purpose
             ){
         try{
             if( option == 1){
@@ -187,7 +209,11 @@ public class XuLiController {
             }else{
                 followInter.unfollow(baidangId, thongtinId);
             }
-            return "redirect:/question/" + baidangId;
+            if( purpose != null ){
+                return "redirect:" + purpose;
+            }else{
+                return "redirect:/question/" + baidangId;
+            }
         }catch (Exception ex){
             return "redirect:/error";
         }
@@ -227,6 +253,57 @@ public class XuLiController {
         thongTinGoc.get().setGioiThieu(thongTin.getGioiThieu());
         thongTinInter.updateThongTin(thongTinGoc.get());
         return "redirect:/user/" + userId;
+    }
+
+    // filter question page
+    @PostMapping("/question/filter")
+    public String filterPageQuestion(
+            @RequestParam(value = "filter") String filter,
+            @RequestParam(value = "sort") String sort,
+            @RequestParam(value = "tags", required = false) String[] tags
+            ){
+        String url = "";
+        if( !filter.isEmpty() ){
+            url += "filter=" + filter;
+        }
+        if( !sort.isEmpty() ){
+            if( filter.isEmpty()){
+                url += "sort=" + sort;
+            }
+            else{
+                url += "&sort=" + sort;
+            }
+        }
+        if( tags != null ){
+            if( !filter.isEmpty() || !sort.isEmpty() ){
+                url += "&";
+            }
+            for ( int i = 0 ; i < tags.length ; i++){
+                if( i != tags.length -1){
+                    url += "tagUsed=" + tags[i].replace(" ", "+") + "&";
+                }else{
+                    url += "tagUsed=" + tags[i].replace(" ", "+");
+                }
+            }
+        }
+        if( !url.isEmpty()){
+            return "redirect:/question?" + url;
+        }else{
+            return "redirect:/question";
+        }
+    }
+
+    // delete question
+    @PostMapping("/delete/question/{baidang}")
+    public String deleteQuestion( @PathVariable Long baidang,
+                                  @RequestParam(value = "purpose", defaultValue = "") String purpose
+    ){
+        try{
+            baiDangInter.deleteQuestion(baidang);
+            return "redirect:" + purpose;
+        }catch (Exception ex){
+            return "error";
+        }
     }
 }
 

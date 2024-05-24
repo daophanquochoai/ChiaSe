@@ -29,7 +29,6 @@
             >
                 <span class="d-none array_follow" th:data-array-follow="${baiDangJson}"></span>
                 <span class="d-none info_id" th:text="${info.getId()}"></span>
-
                 <div class="header_logo">
                     <a th:href="@{/home}"
                         ><img
@@ -42,7 +41,10 @@
                     <p>Products</p>
                     <div class="header_search_input w-100">
                         <!-- <div>icon</div> -->
-                        <input />
+                        <input type="text"
+                               onkeypress="handleKeyPress(event, this.value)"
+                        />
+
                     </div>
                 </div>
                 <div class="header_info d-flex align-items-center">
@@ -83,10 +85,10 @@
                     <a th:href="@{/tag}" class="navbar_items no_action">
                         <p>Tag</p>
                     </a>
-                    <a th:href="@{/Saved}" class="navbar_items no_action">
+                    <a th:href="@{/saved}" class="navbar_items no_action">
                         <p>Saved</p>
                     </a>
-                    <a th:href="@{/Users}" class="navbar_items no_action">
+                    <a th:href="@{/users}" class="navbar_items no_action">
                         <p>Users</p>
                     </a>
                 </nav>
@@ -241,6 +243,7 @@
             <!-- add baidang -->
             <form th:action="@{/upload}" th:object="${baidang}" method="POST" enctype="multipart/form-data" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <input style="display: none" th:value="${info.getId()}" name="id">
+                <input style="display: none" th:value="@{${request.requestURI} + ${request.queryString != null ?'?' + request.queryString : ''}}" name="purpose">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -304,7 +307,7 @@
                         <button type="submit" class="btn btn-info tao_bai_viet" style="color:white">Tạo bài viết</button>
                         <button class="btn btn-info button_loading" type="button" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            <span style="color:white">Tạo bài viết</span>
+                            <span style="color:white">Đang tạo...</span>
                         </button>
                       </div>
                     </div>
@@ -320,7 +323,7 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
               <script th:src="@{/js/base.js}"></script>
-              <script src="../static/js/modal_question.js"></script>
+              <script th:src="@{/js/modal_question.js}"></script>
               <script th:src="@{/js/home.js}"></script>
 <!--                      <script src="../static/js/base.js"> </scrip>-->
 <!--          <script src="../static/js/home.js"></script>-->

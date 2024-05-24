@@ -104,16 +104,33 @@ const noticeNumber = document.querySelector(".header_info .notice_number");
 const receiverMessage = (payload) =>{
     var message = JSON.parse(payload.body);
     if( arrayFollowData != null ){
-        console.log("Nhận tin nhắn mới :", arrayFollowData.includes(message.baiDangId));
-        console.log("Nhận tin nhắn mới :", message.nguoiCommentId != infoId );
-        if( arrayFollowData.includes(message.baiDangId) && message.nguoiCommentId != infoId ){
-
-            console.log("Nhận tin nhắn mới :", message.tenNguoiComment);
+        if( arrayFollowData.includes(message.baiDangId) && message.nguoiCommentId != infoId.textContent ){
             noticeNumber.textContent = +noticeNumber.textContent + 1;
             const a = document.createElement("a");
             const div = document.createElement("div");
             const li = document.createElement("li");
             li.textContent ="Bài đăng của bạn đã có " + message.tenNguoiComment + " bình luận";
+            const span = document.createElement("span");
+            span.textContent = message.thoiGian;
+            div.appendChild(li);
+            div.appendChild(span);
+            div.classList.add("notice_item");
+            a.appendChild(div);
+            a.href = window.location.origin + "/question/" + message.baiDangId;
+            div.style.backgroundColor = "#d9d4d4";
+            // noticeList.appendChild(a);
+            if (noticeList.firstChild) {
+                noticeList.insertBefore(a, noticeList.firstChild);
+            } else {
+                noticeList.appendChild(a);
+            }
+        }
+        if( infoId.textContent == message.nguoiDangId ){
+            noticeNumber.textContent = +noticeNumber.textContent + 1;
+            const a = document.createElement("a");
+            const div = document.createElement("div");
+            const li = document.createElement("li");
+            li.textContent = "Bài đăng của bạn đã có " +  message.tenNguoiComment  + " bình luận";
             const span = document.createElement("span");
             span.textContent = message.thoiGian;
             div.appendChild(li);
@@ -152,4 +169,9 @@ document.body.addEventListener('click', function(event) {
     }
 });
 
-
+// search question in header
+const handleKeyPress = (event, value) =>{
+    if (event.keyCode === 13) {
+        window.location.href = '/question?q=' + value;
+    }
+}

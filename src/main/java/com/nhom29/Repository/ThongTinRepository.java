@@ -1,6 +1,8 @@
 package com.nhom29.Repository;
 
 import com.nhom29.Model.ERD.ThongTin;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,9 @@ public interface ThongTinRepository extends JpaRepository<ThongTin, Long> {
     Optional<ThongTin> findByEmail(String email);
     @Query("select t from ThongTin t where t.taiKhoanThongTin.taiKhoan.username = :username")
     Optional<ThongTin> findByUsername(String username);
+
+    @Query("select t from ThongTin t where t.Ten like %:q% or t.Ho like %:q% or t.GioiThieu like %:q%")
+    Page<ThongTin> findAllUserWithQ(String q, PageRequest pageRequest);
 }
 
 

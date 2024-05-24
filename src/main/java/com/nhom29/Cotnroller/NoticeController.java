@@ -27,10 +27,10 @@ public class NoticeController {
     @MessageMapping("/comment")
     @SendTo("/notice/all")
     public NoticeMessageReceive sendNotice(@Payload NoticeMessage noticeMessage){
-        thongBaoInter.taoThongBaoTheoBaiDang(noticeMessage.getBaidang(), noticeMessage.getNguoicomment());
         Optional<BaiDang> baiDang = baiDangInter.layChiTietBaiDang( noticeMessage.getBaidang());
         Optional<ThongTin> thongTin = thongTinInter.layThongTin(noticeMessage.getNguoicomment());
         if( baiDang.isEmpty() || thongTin.isEmpty() ) throw  new RuntimeException("noticeMessage");
-        return new NoticeMessageReceive(baiDang.get().getId(), thongTin.get().getTen(), noticeMessage.getNguoicomment(),  LocalDateTime.now());
+        thongBaoInter.taoThongBaoTheoBaiDang(noticeMessage.getBaidang(), noticeMessage.getNguoicomment());
+        return new NoticeMessageReceive(baiDang.get().getId(), baiDang.get().getThongTin().getId(), thongTin.get().getTen(), noticeMessage.getNguoicomment(),  LocalDateTime.now());
     }
 }

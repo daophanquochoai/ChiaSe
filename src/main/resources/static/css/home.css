@@ -20,7 +20,9 @@
     cursor: pointer;
 }
 .section_body .section_body_bottom{
-    max-height: calc(100% - 130px);
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 /* item */
 .section_body .section_body_bottom .section_body_item{
