@@ -21,7 +21,7 @@ public class Tag {
     @Column(columnDefinition = "varchar(50)", nullable = false)
     private String TenTag;
 
-    @ManyToMany(mappedBy = "tag", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+    @ManyToMany(mappedBy = "tag", fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST} )
     private Set<BaiDang> baiDang = new HashSet<>();
     @Column( columnDefinition = "NTEXT")
     private String noidung;

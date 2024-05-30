@@ -149,7 +149,7 @@ public class HomeController {
                         Tag newTag = new Tag();
                         newTag.setTenTag(tagName);
                         newTag.setThoigiantao(LocalDateTime.now());
-                        b.getTag().add(newTag);
+                        b.getTag().add(tagInter.save(newTag));
                     }
                 }
             }

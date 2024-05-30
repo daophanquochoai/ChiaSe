@@ -41,6 +41,11 @@ public class TagService implements TagInter {
     }
 
     @Override
+    public Tag save(Tag tag) {
+        return tagRepo.save(tag);
+    }
+
+    @Override
     public Tag getTagByName(String name) {
         Optional<Tag> tag = tagRepo.findTagByName(name);
         if( tag.isEmpty()) return null;
