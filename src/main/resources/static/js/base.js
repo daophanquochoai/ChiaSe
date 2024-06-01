@@ -170,8 +170,8 @@ document.body.addEventListener('click', function(event) {
 });
 
 // search question in header
-const handleKeyPress = (event, value) =>{
-    if (event.keyCode === 13) {
-        window.location.href = '/question?q=' + value;
-    }
-}
+// const handleKeyPress = (event, value) =>{
+//     if (event.keyCode === 13) {
+//         window.location.href = '/question?q=' + value;
+//     }
+// }
